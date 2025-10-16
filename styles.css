@@ -1,0 +1,235 @@
+/* Variables CSS para consistencia */
+:root {
+  --color-primary: #000;
+  --color-background: #f0f0f0;
+  --color-surface: #fff;
+  --border-radius: 25px;
+  --transition: all 0.3s ease;
+  --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset y base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+}
+
+/* Contenedor principal optimizado */
+.contenedor-login {
+  width: 100%;
+  max-width: 320px;
+  padding: 40px 24px;
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Logo container */
+.logo-contenedor {
+  width: 100%;
+  height: 80px;
+  margin-bottom: 24px;
+  background-color: var(--color-surface);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.logo {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+/* Inputs optimizados */
+.input-login,
+.select-empresas {
+  width: 100%;
+  height: 48px;
+  padding: 0 20px;
+  margin-bottom: 16px;
+  border-radius: var(--border-radius);
+  border: 2px solid transparent;
+  background-color: var(--color-surface);
+  font-size: 15px;
+  transition: var(--transition);
+  text-align: center;
+  outline: none;
+}
+
+.input-login:focus,
+.select-empresas:focus {
+  border-color: #666;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.input-login::placeholder {
+  color: #999;
+  font-size: 14px;
+}
+
+/* Select personalizado */
+.select-empresas {
+  margin-bottom: 24px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 12px;
+  padding-right: 40px;
+}
+
+.select-empresas:hover {
+  background-color: #f5f5f5;
+}
+
+/* Botón optimizado */
+.btn-inicio-sesion {
+  width: 100%;
+  height: 48px;
+  padding: 0 20px;
+  border-radius: var(--border-radius);
+  border: none;
+  background-color: var(--color-surface);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-inicio-sesion:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-inicio-sesion:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estados de validación */
+.input-login.error {
+  border-color: #e74c3c;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+/* Mensaje de error */
+.error-mensaje {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  background-color: #fee;
+  color: #c33;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+  display: none;
+}
+
+.error-mensaje.show {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading state */
+.btn-inicio-sesion.loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
+.btn-inicio-sesion.loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  margin-left: -10px;
+  margin-top: -10px;
+  border: 2px solid var(--color-primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .contenedor-login {
+    max-width: 100%;
+    margin: 16px;
+    padding: 32px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
