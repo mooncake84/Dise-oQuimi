@@ -1,0 +1,46 @@
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login QuimiTech Completo</title>
+    <link rel="stylesheet" href="styles.css" />
+      </head>
+  <body>
+    <div class="contenedor-login">
+      <div class="logo-contenedor">
+        <img
+          id="logo-empresa"
+          class="logo"
+          src="./images/quimitech.png"
+          alt="Logotipo de la Empresa"
+        />
+      </div>
+
+      <input
+        type="email"
+        id="email"
+        class="input-login"
+        placeholder="Correo Electrónico"
+      />
+
+      <input
+        type="password"
+        id="password"
+        class="input-login"
+        placeholder="Contraseña"
+      />
+
+      <select id="empresas-select" class="select-empresas">
+        <option value="" disabled selected>Empresas</option>
+        <option value="empresa1">Empresa A</option>
+        <option value="empresa2">Empresa B</option>
+        <option value="empresa3">Empresa C</option>
+      </select>
+
+      <button id="iniciar-sesion-btn" class="btn-inicio-sesion">
+        Iniciar sesión
+      </button>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>

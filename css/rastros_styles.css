@@ -1,0 +1,76 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  /* Asegura que el contenedor principal ocupe toda la altura de la ventana */
+  min-height: 100vh;
+  display: flex;
+}
+
+.contenedor-principal {
+  display: flex;
+  width: 100vw; /* Ocupa el 100% del ancho de la vista */
+  min-height: 100vh;
+}
+
+/* Sección de Imagen (Izquierda) */
+.seccion-imagen {
+  flex: 1; /* Ocupa la mitad del espacio (ajusta este valor para cambiar el ancho) */
+  background-image: url("URL_DE_LA_IMAGEN_DE_LABORATORIO.jpg"); /* Reemplaza con la URL de tu imagen de fondo */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.etiqueta-cliente {
+  /* Estilo para el recuadro "CLIENTES" */
+  position: absolute;
+  /* Ajusta estos valores para posicionarlo como en tu imagen */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrar */
+
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente oscuro */
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  padding: 10px 40px;
+  border-radius: 8px;
+  letter-spacing: 2px;
+}
+
+/* Sección de Botones (Derecha) */
+.seccion-botones {
+  flex: 1; /* Ocupa la otra mitad del espacio */
+  background-color: #000; /* Fondo negro */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centrar botones verticalmente */
+  align-items: center; /* Centrar botones horizontalmente */
+  gap: 30px; /* Espacio entre los botones */
+  padding: 20px;
+}
+
+/* Estilo para los botones (Líneas blancas) */
+.btn-menu {
+  width: 80%; /* Ancho de las líneas */
+  height: 60px; /* Alto de las líneas */
+  padding: 0;
+  border: none;
+  border-radius: 30px; /* Curvatura para los extremos redondeados */
+  background-color: #fff; /* Color blanco */
+  color: #000; /* Texto negro o invisible, si no quieres texto */
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  /* Puedes ocultar el texto si solo quieres las líneas blancas */
+  /* text-indent: -9999px; */
+}
+
+.btn-menu:hover {
+  background-color: #eee;
+}
