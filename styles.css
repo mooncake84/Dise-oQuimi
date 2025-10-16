@@ -15,6 +15,7 @@
   box-sizing: border-box;
 }
 
+/* Estilos de BODY GENERAL (Aplicables a index.html) */
 body {
   display: flex;
   justify-content: center;
@@ -25,7 +26,7 @@ body {
     Ubuntu, Cantarell, sans-serif;
 }
 
-/* Contenedor principal optimizado */
+/* Contenedor principal optimizado (Exclusivo de index.html) */
 .contenedor-login {
   width: 100%;
   max-width: 320px;
@@ -141,7 +142,8 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Estados de validación */
+/* Estados de validación y Loading state... (se mantienen) */
+
 .input-login.error {
   border-color: #e74c3c;
   animation: shake 0.3s;
@@ -160,7 +162,6 @@ body {
   }
 }
 
-/* Mensaje de error */
 .error-mensaje {
   width: 100%;
   padding: 12px;
@@ -189,7 +190,6 @@ body {
   }
 }
 
-/* Loading state */
 .btn-inicio-sesion.loading {
   position: relative;
   color: transparent;
@@ -217,7 +217,7 @@ body {
   }
 }
 
-/* Responsive */
+/* Responsive (se mantiene) */
 @media (max-width: 480px) {
   .contenedor-login {
     max-width: 100%;
@@ -231,5 +231,112 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * ========================================
+ * ESTILOS ESPECÍFICOS PARA rastros.html
+ * ========================================
+ */
+
+/* 1. Anular estilos del body para rastros.html */
+body.rastros-page {
+  display: block; /* Anula el 'display: flex' general */
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* 2. Contenedor Principal: Diseño de dos columnas (Desktop) */
+.contenedor-principal {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* 3. Sección de la Imagen (Izquierda) */
+.seccion-imagen {
+  /* 💥 CAMBIO AQUÍ: Ocupará menos espacio, relación 2/5 (aprox. 40%) */
+  flex: 2;
+  min-width: 40%; /* Ajuste de min-width para evitar el colapso prematuro */
+  position: relative;
+  background-image: url("./images/lab.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+/* Etiqueta CLIENTES */
+.etiqueta-cliente {
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente oscuro */
+  color: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* 4. Sección de Botones (Derecha - Fondo Negro) */
+.seccion-botones {
+  /* 💥 CAMBIO AQUÍ: Ocupará más espacio, relación 3/5 (aprox. 60%) */
+  flex: 3;
+  min-width: 60%; /* Ajuste de min-width */
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Estilo de los Botones de Rastros (Forma Ovalada) */
+.btn-menu-rastros {
+  width: 80%;
+  max-width: 450px;
+  height: 90px;
+  margin: 20px 0; /* Separación entre botones */
+  border-radius: 45px; /* Forma ovalada */
+  border: none;
+  background-color: #fff;
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: none;
+}
+
+.btn-menu-rastros:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.02);
+}
+
+/* 5. Responsividad para rastros.html */
+@media (max-width: 768px) {
+  .contenedor-principal {
+    flex-direction: column;
+  }
+
+  .seccion-imagen {
+    min-height: 250px;
+    min-width: 100%;
+    padding: 20px;
+  }
+
+  .seccion-botones {
+    min-width: 100%;
+    padding: 40px 20px;
+  }
+
+  .btn-menu-rastros {
+    width: 100%;
+    max-width: none;
   }
 }
