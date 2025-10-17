@@ -56,7 +56,7 @@
 
     <script src="index.js"></script>
     <script>
-      // Lógica de transición del carrusel
+      // Lógica de transición del carrusel (mover esto a index.js para un proyecto limpio)
       let slideIndex = 0;
       const slides = document.querySelectorAll(".carrusel-item");
 
@@ -66,9 +66,7 @@
         slides[slideIndex].classList.add("active");
       }
 
-      if (slides.length > 0) {
-        setInterval(nextSlide, 5000);
-      }
+      setInterval(nextSlide, 8000); // Cambia cada 8 segundos
     </script>
   </body>
 </html>

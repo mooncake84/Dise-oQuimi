@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // 💥 ELIMINADO: selectEmpresas 💥
+  // 💥 ELIMINADO: selectEmpresas ha sido removido. 💥
   const btnInicioSesion = document.getElementById("iniciar-sesion-btn");
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (email && password) {
       // 💥 CRÍTICO: GUARDAR LA EMPRESA POR DEFECTO (EMPRESA A) 💥
+      // Al no haber selector, asumimos una empresa inicial (Empresa A) al iniciar sesión.
       localStorage.setItem("selectedCompany", "empresa1");
 
       const paginaDeDestino = "rastros.html";
