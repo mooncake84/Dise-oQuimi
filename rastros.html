@@ -7,15 +7,43 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="rastros-page">
+    <header class="rastros-header">
+      <div class="empresa-info-selector">
+        <select id="select-cambio-empresa" class="select-empresa-header">
+          <option value="empresa1">Empresa A</option>
+          <option value="empresa2">Empresa B</option>
+          <option value="empresa3">Empresa C</option>
+        </select>
+        <p id="nombre-empresa-actual" class="nombre-empresa-actual"></p>
+      </div>
+    </header>
     <div class="contenedor-principal">
       <div class="seccion-imagen">
         <div class="etiqueta-cliente">CLIENTES</div>
       </div>
       <div class="seccion-botones">
-        <button id="btn-opcion1" class="btn-menu-rastros">BOTON</button>
-        <button id="btn-opcion2" class="btn-menu-rastros">BOTON</button>
-        <button id="btn-opcion3" class="btn-menu-rastros">BOTON</button>
+        <button id="btn-opcion1" class="btn-menu-rastros">
+          INFORMACION GENERAL
+        </button>
+        <button id="btn-opcion2" class="btn-menu-rastros">
+          PROGRAMACION DE ACTIVIDADES
+        </button>
+        <button id="btn-opcion3" class="btn-menu-rastros">ACTIVIDADES</button>
       </div>
     </div>
+
+    <div id="info-modal-overlay" class="info-modal-overlay">
+      <div class="info-modal-content">
+        <button id="cerrar-modal" class="cerrar-modal">X</button>
+        <h2>Información de la Empresa</h2>
+        <div id="info-empresa-detalle"></div>
+        <p
+          id="error-empresa"
+          style="display: none; color: red; margin-top: 15px"
+        ></p>
+      </div>
+    </div>
+
+    <script src="rastros_script.js"></script>
   </body>
 </html>

@@ -15,15 +15,61 @@
   box-sizing: border-box;
 }
 
-/* Estilos de BODY GENERAL (Aplicables a index.html) */
+/* * ========================================
+ * ESTILOS GLOBALES & LOGIN (index.html)
+ * ========================================
+ */
+
+/* Estilos de BODY GENERAL (Modificado para Carrusel) */
 body {
+  display: block;
+  min-height: 100vh;
+  background-color: #000; /* Fondo de seguridad */
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+}
+
+/* CARRUSEL DE FONDO */
+.carrusel-fondo {
+  position: fixed; /* Ocupa toda la vista */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  filter: blur(5px) brightness(0.7); /* Desenfocar y oscurecer el fondo */
+}
+
+.carrusel-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.carrusel-item.active {
+  opacity: 1;
+}
+
+/* Contenedor central para centrar el login sobre el carrusel */
+.contenedor-central {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: var(--color-background);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
+  z-index: 10;
 }
 
 /* Contenedor principal optimizado (Exclusivo de index.html) */
@@ -70,9 +116,8 @@ body {
   object-fit: contain;
 }
 
-/* Inputs optimizados */
-.input-login,
-.select-empresas {
+/* Inputs y Select */
+.input-login {
   width: 100%;
   height: 48px;
   padding: 0 20px;
@@ -86,35 +131,7 @@ body {
   outline: none;
 }
 
-.input-login:focus,
-.select-empresas:focus {
-  border-color: #666;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.input-login::placeholder {
-  color: #999;
-  font-size: 14px;
-}
-
-/* Select personalizado */
-.select-empresas {
-  margin-bottom: 24px;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  background-size: 12px;
-  padding-right: 40px;
-}
-
-.select-empresas:hover {
-  background-color: #f5f5f5;
-}
-
-/* Botón optimizado */
+/* Botón de login */
 .btn-inicio-sesion {
   width: 100%;
   height: 48px;
@@ -131,93 +148,7 @@ body {
   letter-spacing: 0.5px;
 }
 
-.btn-inicio-sesion:hover {
-  background-color: #f5f5f5;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-.btn-inicio-sesion:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Estados de validación y Loading state... (se mantienen) */
-
-.input-login.error {
-  border-color: #e74c3c;
-  animation: shake 0.3s;
-}
-
-@keyframes shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-10px);
-  }
-  75% {
-    transform: translateX(10px);
-  }
-}
-
-.error-mensaje {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 16px;
-  background-color: #fee;
-  color: #c33;
-  border-radius: 8px;
-  font-size: 13px;
-  text-align: center;
-  display: none;
-}
-
-.error-mensaje.show {
-  display: block;
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.btn-inicio-sesion.loading {
-  position: relative;
-  color: transparent;
-  pointer-events: none;
-}
-
-.btn-inicio-sesion.loading::after {
-  content: "";
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  top: 50%;
-  left: 50%;
-  margin-left: -10px;
-  margin-top: -10px;
-  border: 2px solid var(--color-primary);
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Responsive (se mantiene) */
+/* Responsive (index.html) */
 @media (max-width: 480px) {
   .contenedor-login {
     max-width: 100%;
@@ -226,29 +157,20 @@ body {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
 /*
  * ========================================
- * ESTILOS ESPECÍFICOS PARA rastros.html
+ * ESTILOS ESPECÍFICOS PARA rastros.html (40/60 Layout)
  * ========================================
  */
 
-/* 1. Anular estilos del body para rastros.html */
 body.rastros-page {
-  display: block; /* Anula el 'display: flex' general */
+  display: block;
   padding: 0;
   margin: 0;
   min-height: 100vh;
 }
 
-/* 2. Contenedor Principal: Diseño de dos columnas (Desktop) */
+/* Contenedor Principal: Diseño de dos columnas (Desktop) */
 .contenedor-principal {
   display: flex;
   min-height: 100vh;
@@ -256,12 +178,12 @@ body.rastros-page {
   overflow: hidden;
 }
 
-/* 3. Sección de la Imagen (Izquierda) */
+/* 3. Sección de la Imagen (Izquierda) - 40% */
 .seccion-imagen {
-  /* 💥 CAMBIO AQUÍ: Ocupará menos espacio, relación 2/5 (aprox. 40%) */
-  flex: 2;
-  min-width: 40%; /* Ajuste de min-width para evitar el colapso prematuro */
+  flex: 2; /* 40% del total (2 de 5 partes) */
+  min-width: 40%;
   position: relative;
+  /* Asegúrate de que esta ruta sea correcta: */
   background-image: url("./images/lab.jpg");
   background-size: cover;
   background-position: center;
@@ -273,7 +195,7 @@ body.rastros-page {
 
 /* Etiqueta CLIENTES */
 .etiqueta-cliente {
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente oscuro */
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
   padding: 20px 30px;
   border-radius: 10px;
@@ -282,16 +204,16 @@ body.rastros-page {
   text-transform: uppercase;
 }
 
-/* 4. Sección de Botones (Derecha - Fondo Negro) */
+/* 4. Sección de Botones (Derecha - Fondo Negro) - 60% */
 .seccion-botones {
-  /* 💥 CAMBIO AQUÍ: Ocupará más espacio, relación 3/5 (aprox. 60%) */
-  flex: 3;
-  min-width: 60%; /* Ajuste de min-width */
+  flex: 3; /* 60% del total (3 de 5 partes) */
+  min-width: 60%;
   background-color: #000;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /* El padding se ajusta por el header en móvil, ver media query */
   padding: 20px;
 }
 
@@ -300,8 +222,8 @@ body.rastros-page {
   width: 80%;
   max-width: 450px;
   height: 90px;
-  margin: 20px 0; /* Separación entre botones */
-  border-radius: 45px; /* Forma ovalada */
+  margin: 20px 0;
+  border-radius: 45px;
   border: none;
   background-color: #fff;
   color: #000;
@@ -313,12 +235,7 @@ body.rastros-page {
   box-shadow: none;
 }
 
-.btn-menu-rastros:hover {
-  background-color: #f0f0f0;
-  transform: scale(1.02);
-}
-
-/* 5. Responsividad para rastros.html */
+/* Responsividad para rastros.html */
 @media (max-width: 768px) {
   .contenedor-principal {
     flex-direction: column;
@@ -339,4 +256,155 @@ body.rastros-page {
     width: 100%;
     max-width: none;
   }
+}
+
+/*
+ * ========================================
+ * ESTILOS PARA EL NUEVO HEADER DE RASTROS 💥
+ * ========================================
+ */
+
+.rastros-header {
+  position: fixed;
+  top: 0;
+  left: 40%; /* Comienza donde termina la imagen (40%) */
+  width: 60%;
+  height: 70px;
+  background-color: #111; /* Fondo oscuro */
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 50;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.empresa-info-selector {
+  display: flex;
+  align-items: center;
+}
+
+.select-empresa-header {
+  padding: 8px 30px 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #333;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+  /* Icono de flecha blanco */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23FFF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+}
+
+.nombre-empresa-actual {
+  color: #bbb;
+  font-size: 14px;
+  margin-left: 15px;
+  font-weight: 500;
+}
+
+/* Ajustes para móviles */
+@media (max-width: 768px) {
+  .rastros-header {
+    left: 0;
+    width: 100%;
+    position: relative; /* Ocupa espacio normal en móvil */
+    height: 50px;
+    /* Asegura que no se superponga el contenido */
+    margin-bottom: 20px;
+  }
+
+  .contenedor-principal {
+    /* Desplaza todo el contenido para evitar solapamiento si el header es fixed */
+    padding-top: 0;
+  }
+}
+
+/*
+ * ========================================
+ * ESTILOS PARA EL MODAL DE INFORMACIÓN 
+ * ========================================
+ */
+
+.info-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.3s;
+}
+
+.info-modal-overlay.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.info-modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+  position: relative;
+  color: var(--color-primary);
+  animation: modalSlide 0.4s ease-out;
+}
+
+@keyframes modalSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.info-modal-content h2 {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  color: #000;
+  font-size: 22px;
+}
+
+#info-empresa-detalle h3 {
+  margin-bottom: 10px;
+  color: var(--color-primary);
+}
+
+.info-modal-content p {
+  margin: 8px 0;
+  font-size: 15px;
+}
+
+.cerrar-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+
+.cerrar-modal:hover {
+  color: red;
 }
