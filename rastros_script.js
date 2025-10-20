@@ -1,12 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   const btnInfoGeneral = document.getElementById("btn-opcion1");
-  const infoModalOverlay = document.getElementById("info-modal-overlay");
-  const cerrarModalBtn = document.getElementById("cerrar-modal");
 
   const selectCambioEmpresa = document.getElementById("select-cambio-empresa");
   const nombreEmpresaActual = document.getElementById("nombre-empresa-actual");
-  const infoEmpresaDetalle = document.getElementById("info-empresa-detalle");
-  const errorEmpresaMsg = document.getElementById("error-empresa");
 
   // DATOS PROVISIONALES 'X' PARA LAS EMPRESAS
   const datosEmpresas = {
@@ -27,70 +23,48 @@ document.addEventListener("DOMContentLoaded", function () {
     empresa3: {
       nombre: "Empresa C (Datos Provisional X)",
       direccion: "Dirección Pendiente X - Boulevard Química 101",
-      contacto: "email-provisional-C@dominio-x.com",
+      contacto: "email-provisional-c@dominio-x.com",
       telefono: "Teléfono Pendiente (55) XXXX-0003",
-      giro: "Giro Investigación Provisional X (Análisis)",
+      giro: "Giro Agrícola Provisional X (Fertilizantes)",
     },
   };
-
   /**
-   * Carga los datos de la empresa, actualiza el header y guarda en localStorage.
-   * @param {string} companyId - El ID de la empresa (ej: 'empresa1').
+   * Actualiza el nombre de la empresa en el header y guarda el ID.
+   * @param {string} companyId - El ID de la empresa.
    */
   function actualizarEmpresaVista(companyId) {
-    const datos = datosEmpresas[companyId];
+    const nombreEmpresa = datosEmpresas[companyId]
+      ? datosEmpresas[companyId].nombre
+      : "Empresa No Seleccionada";
 
-    if (datos) {
-      // 1. Guardar la nueva empresa seleccionada
-      localStorage.setItem("selectedCompany", companyId);
-
-      // 2. Actualizar el selector para reflejar el cambio (si no fue el que disparó el evento)
-      selectCambioEmpresa.value = companyId;
-
-      // 3. Actualizar el texto del header
-      nombreEmpresaActual.textContent = `Empresa Actual: ${datos.nombre}`;
-
-      console.log(`Empresa cambiada y guardada: ${datos.nombre}`);
-    } else {
-      console.error("ID de empresa no encontrado:", companyId);
-      nombreEmpresaActual.textContent = "Empresa No Seleccionada";
-    }
+    nombreEmpresaActual.textContent = `Empresa Actual: ${nombreEmpresa}`;
+    selectCambioEmpresa.value = companyId; // Sincroniza el <select>
+    localStorage.setItem("selectedCompany", companyId); // Guarda la selección
   }
 
-  /**
-   * Muestra el modal con la información detallada de la empresa actual.
-   */
-  function mostrarModalInfo() {
-    // 1. Obtener la empresa actual de localStorage
-    const selectedCompany = localStorage.getItem("selectedCompany");
+  // 💥 FUNCIÓN MODIFICADA: Ahora abre una nueva ventana 💥
+  function abrirVentanaInfo() {
+    // 1. Obtener la empresa seleccionada de localStorage
+    const selectedCompany =
+      localStorage.getItem("selectedCompany") || "empresa1";
 
-    infoEmpresaDetalle.innerHTML = "";
-    errorEmpresaMsg.style.display = "none";
+    // 2. Abrir la nueva ventana/pestaña
+    // El tamaño y nombre son opcionales. '_blank' asegura una nueva pestaña/ventana.
+    const ventana = window.open(
+      "info_empresa.html?companyId=" + selectedCompany,
+      "InfoEmpresa", // Nombre de la ventana
+      "width=600,height=500,resizable=yes,scrollbars=yes" // Características de la ventana (opcional)
+    );
 
-    if (selectedCompany && datosEmpresas[selectedCompany]) {
-      const datos = datosEmpresas[selectedCompany];
-
-      // 2. CONSTRUIR EL HTML con los datos de la empresa
-      const infoHTML = `
-                <h3>${datos.nombre}</h3>
-                <p><strong>Giro:</strong> ${datos.giro}</p>
-                <p><strong>Dirección:</strong> ${datos.direccion}</p>
-                <p><strong>Contacto Email:</strong> ${datos.contacto}</p>
-                <p><strong>Teléfono:</strong> ${datos.telefono}</p>
-                <p style="margin-top: 20px; font-style: italic;">*Esta información es provisional y debe ser reemplazada.</p>
-            `;
-      infoEmpresaDetalle.innerHTML = infoHTML;
-      infoModalOverlay.classList.add("visible");
+    if (ventana) {
+      ventana.focus(); // Intenta enfocar la nueva ventana
     } else {
-      errorEmpresaMsg.textContent =
-        "Error: No se pudo cargar la información de la empresa.";
-      errorEmpresaMsg.style.display = "block";
-      infoModalOverlay.classList.add("visible");
+      alert(
+        "El navegador bloqueó la ventana emergente. Por favor, permítela para ver la información."
+      );
     }
   }
-
   // --- INICIALIZACIÓN: Cargar empresa al entrar a la página ---
-  // Usa la empresa guardada en localStorage o 'empresa1' si no existe
   const empresaInicial = localStorage.getItem("selectedCompany") || "empresa1";
   actualizarEmpresaVista(empresaInicial);
 
@@ -102,18 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // 2. Evento para el botón INFORMACION GENERAL
-  btnInfoGeneral.addEventListener("click", mostrarModalInfo);
+  btnInfoGeneral.addEventListener("click", abrirVentanaInfo);
 
-  // 3. Cerrar modal
-  cerrarModalBtn.addEventListener("click", function () {
-    infoModalOverlay.classList.remove("visible");
-  });
-
-  // 4. Cerrar el modal al hacer clic en el área oscura (overlay)
-  infoModalOverlay.addEventListener("click", function (event) {
-    // Si el clic fue directamente en el overlay (no en el contenido del modal)
-    if (event.target === infoModalOverlay) {
-      infoModalOverlay.classList.remove("visible");
-    }
-  });
+  // ELIMINADOS: Eventos para cerrar el modal
 });

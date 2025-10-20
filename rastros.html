@@ -23,7 +23,11 @@
         <div class="etiqueta-cliente">CLIENTES</div>
       </div>
       <div class="seccion-botones">
-        <button id="btn-opcion1" class="btn-menu-rastros">
+        <button
+          id="btn-opcion1"
+          class="btn-menu-rastros"
+          onclick="window.location.href='info_empresa.html'"
+        >
           INFORMACION GENERAL
         </button>
         <button
@@ -40,18 +44,6 @@
         >
           ACTIVIDADES
         </button>
-      </div>
-    </div>
-
-    <div id="info-modal-overlay" class="info-modal-overlay">
-      <div class="info-modal-content">
-        <button id="cerrar-modal" class="cerrar-modal">X</button>
-        <h2>Información de la Empresa</h2>
-        <div id="info-empresa-detalle"></div>
-        <p
-          id="error-empresa"
-          style="display: none; color: red; margin-top: 15px"
-        ></p>
       </div>
     </div>
 

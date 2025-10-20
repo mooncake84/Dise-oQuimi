@@ -4,6 +4,18 @@ document.addEventListener("DOMContentLoaded", function () {
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
 
+  // Lógica de transición del carrusel (mover esto a index.js para un proyecto limpio)
+  let slideIndex = 0;
+  const slides = document.querySelectorAll(".carrusel-item");
+
+  function nextSlide() {
+    slides[slideIndex].classList.remove("active");
+    slideIndex = (slideIndex + 1) % slides.length;
+    slides[slideIndex].classList.add("active");
+  }
+
+  setInterval(nextSlide, 8000); // Cambia cada 8 segundos
+
   btnInicioSesion.addEventListener("click", function () {
     const email = emailInput.value;
     const password = passwordInput.value;
