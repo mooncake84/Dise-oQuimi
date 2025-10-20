@@ -41,6 +41,13 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("selectedCompany", companyId);
   }
 
+  // Función para abrir información general con la empresa actual
+  window.abrirInformacionGeneral = function () {
+    const selectedCompany =
+      localStorage.getItem("selectedCompany") || "empresa1";
+    window.location.href = `info_empresa.html?companyId=${selectedCompany}`;
+  };
+
   // Inicialización: Cargar empresa al entrar a la página
   const empresaInicial = localStorage.getItem("selectedCompany") || "empresa1";
   actualizarEmpresaVista(empresaInicial);
