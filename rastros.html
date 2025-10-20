@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="rastros-page">
+    <header class="rastros-header rastros-specific"></header>
     <header class="rastros-header">
       <div class="empresa-info-selector">
         <select id="select-cambio-empresa" class="select-empresa-header">
@@ -46,7 +47,10 @@
         </button>
       </div>
     </div>
-
+    <!-- Agregar esto antes del cierre del body en rastros.html -->
+    <script src="data.js"></script>
+    <script src="errorManager.js"></script>
+    <script src="rastros_script.js"></script>
     <script src="rastros_script.js"></script>
   </body>
 </html>

@@ -1,56 +1,56 @@
+// rastros_script.js - Actualizado con manejo de errores
 document.addEventListener("DOMContentLoaded", function () {
   const selectCambioEmpresa = document.getElementById("select-cambio-empresa");
   const nombreEmpresaActual = document.getElementById("nombre-empresa-actual");
-
-  // Datos de las empresas
-  const datosEmpresas = {
-    empresa1: {
-      nombre: "Empresa A (Datos Provisional X)",
-      direccion: "Dirección Pendiente X - Calle Falsa 123",
-      contacto: "email-provisional-A@dominio-x.com",
-      telefono: "Teléfono Pendiente (55) XXXX-0001",
-      giro: "Giro Industrial Provisional X (Químicos)",
-    },
-    empresa2: {
-      nombre: "Empresa B (Datos Provisional X)",
-      direccion: "Dirección Pendiente X - Avenida Siempre Viva 742",
-      contacto: "email-provisional-B@dominio-x.com",
-      telefono: "Teléfono Pendiente (55) XXXX-0002",
-      giro: "Giro Farmacéutico Provisional X (I+D)",
-    },
-    empresa3: {
-      nombre: "Empresa C (Datos Provisional X)",
-      direccion: "Dirección Pendiente X - Boulevard Química 101",
-      contacto: "email-provisional-c@dominio-x.com",
-      telefono: "Teléfono Pendiente (55) XXXX-0003",
-      giro: "Giro Agrícola Provisional X (Fertilizantes)",
-    },
-  };
 
   /**
    * Actualiza el nombre de la empresa en el header y guarda el ID.
    * @param {string} companyId - El ID de la empresa.
    */
   function actualizarEmpresaVista(companyId) {
-    const nombreEmpresa = datosEmpresas[companyId]
-      ? datosEmpresas[companyId].nombre
-      : "Empresa No Seleccionada";
+    try {
+      // Validar que la empresa existe
+      if (!DATOS_EMPRESAS[companyId]) {
+        throw new Error(`Empresa ${companyId} no encontrada`);
+      }
 
-    nombreEmpresaActual.textContent = `Empresa Actual: ${nombreEmpresa}`;
-    selectCambioEmpresa.value = companyId;
-    localStorage.setItem("selectedCompany", companyId);
+      const nombreEmpresa = DATOS_EMPRESAS[companyId].nombre;
+      nombreEmpresaActual.textContent = `Empresa Actual: ${nombreEmpresa}`;
+      selectCambioEmpresa.value = companyId;
+      localStorage.setItem("selectedCompany", companyId);
+    } catch (error) {
+      console.error("Error actualizando vista de empresa:", error);
+      errorManager.mostrarError("Error al cambiar de empresa");
+    }
   }
 
   // Función para abrir información general con la empresa actual
   window.abrirInformacionGeneral = function () {
-    const selectedCompany =
-      localStorage.getItem("selectedCompany") || "empresa1";
-    window.location.href = `info_empresa.html?companyId=${selectedCompany}`;
+    try {
+      const selectedCompany =
+        localStorage.getItem("selectedCompany") || "empresa1";
+
+      // Validar que la empresa existe
+      if (!DATOS_EMPRESAS[selectedCompany]) {
+        throw new Error(`Empresa ${selectedCompany} no encontrada`);
+      }
+
+      window.location.href = `info_empresa.html?companyId=${selectedCompany}`;
+    } catch (error) {
+      console.error("Error abriendo información general:", error);
+      errorManager.mostrarError("Error al abrir información de la empresa");
+    }
   };
 
   // Inicialización: Cargar empresa al entrar a la página
-  const empresaInicial = localStorage.getItem("selectedCompany") || "empresa1";
-  actualizarEmpresaVista(empresaInicial);
+  try {
+    const empresaInicial =
+      localStorage.getItem("selectedCompany") || "empresa1";
+    actualizarEmpresaVista(empresaInicial);
+  } catch (error) {
+    console.error("Error en inicialización:", error);
+    errorManager.mostrarError("Error al inicializar la aplicación");
+  }
 
   // Evento para cambiar la empresa en el selector del header
   selectCambioEmpresa.addEventListener("change", function () {

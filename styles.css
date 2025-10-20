@@ -1,4 +1,6 @@
-/* Variables CSS para consistencia */
+/* ========================================
+ * VARIABLES CSS Y RESET
+ * ======================================== */
 :root {
   --color-primary: #000;
   --color-background: #f0f0f0;
@@ -8,39 +10,159 @@
   --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Reset y base */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* * ========================================
- * ESTILOS GLOBALES & LOGIN (index.html)
- * ========================================
- */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+}
 
-/* Estilos de BODY GENERAL (Modificado para Carrusel) */
+/* ========================================
+ * ANIMACIONES GLOBALES
+ * ======================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes modalSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+ * ESTILOS GLOBALES Y UTILIDADES
+ * ======================================== */
+.error-mensaje {
+  color: #d32f2f;
+  font-weight: bold;
+  text-align: center;
+  background-color: #ffebee;
+  padding: 15px;
+  border-radius: 5px;
+  border-left: 4px solid #d32f2f;
+}
+
+.btn-regresar {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 15px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.btn-regresar:hover {
+  background-color: #333;
+}
+
+/* ========================================
+ * HEADER COMÚN PARA TODAS LAS PÁGINAS
+ * ======================================== */
+.rastros-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: #111;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 50;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.empresa-info-selector {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.select-empresa-header {
+  padding: 8px 30px 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #333;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23FFF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+}
+
+.nombre-empresa-actual {
+  color: #bbb;
+  font-size: 14px;
+  margin-left: 15px;
+  font-weight: 500;
+}
+
+/* ========================================
+ * ESTILOS PARA LOGIN (index.html)
+ * ======================================== */
 body {
   display: block;
   min-height: 100vh;
-  background-color: #000; /* Fondo de seguridad */
+  background-color: #000;
   position: relative;
   overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
 }
 
 /* CARRUSEL DE FONDO */
 .carrusel-fondo {
-  position: fixed; /* Ocupa toda la vista */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
   z-index: 1;
-  filter: blur(5px) brightness(0.7); /* Desenfocar y oscurecer el fondo */
+  filter: blur(5px) brightness(0.7);
 }
 
 .carrusel-item {
@@ -59,7 +181,6 @@ body {
   opacity: 1;
 }
 
-/* Contenedor central para centrar el login sobre el carrusel */
 .contenedor-central {
   position: absolute;
   top: 0;
@@ -72,7 +193,6 @@ body {
   z-index: 10;
 }
 
-/* Contenedor principal optimizado (Exclusivo de index.html) */
 .contenedor-login {
   width: 100%;
   max-width: 320px;
@@ -86,18 +206,6 @@ body {
   animation: fadeIn 0.5s ease;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Logo container */
 .logo-contenedor {
   width: 100%;
   height: 80px;
@@ -116,7 +224,6 @@ body {
   object-fit: contain;
 }
 
-/* Inputs y Select */
 .input-login {
   width: 100%;
   height: 48px;
@@ -131,7 +238,11 @@ body {
   outline: none;
 }
 
-/* Botón de login */
+.input-login:focus {
+  border-color: var(--color-surface);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
 .btn-inicio-sesion {
   width: 100%;
   height: 48px;
@@ -148,29 +259,27 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Responsive (index.html) */
-@media (max-width: 480px) {
-  .contenedor-login {
-    max-width: 100%;
-    margin: 16px;
-    padding: 32px 20px;
-  }
+.btn-inicio-sesion:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
 }
 
-/*
- * ========================================
- * ESTILOS ESPECÍFICOS PARA rastros.html (40/60 Layout)
- * ========================================
- */
-
+/* ========================================
+ * ESTILOS PARA RASTROS (rastros.html)
+ * ======================================== */
 body.rastros-page {
   display: block;
   padding: 0;
   margin: 0;
   min-height: 100vh;
+  background-color: #000;
 }
 
-/* Contenedor Principal: Diseño de dos columnas (Desktop) */
+.rastros-header.rastros-specific {
+  left: 40%;
+  width: 60%;
+}
+
 .contenedor-principal {
   display: flex;
   min-height: 100vh;
@@ -178,12 +287,10 @@ body.rastros-page {
   overflow: hidden;
 }
 
-/* 3. Sección de la Imagen (Izquierda) - 40% */
 .seccion-imagen {
-  flex: 2; /* 40% del total (2 de 5 partes) */
+  flex: 2;
   min-width: 40%;
   position: relative;
-  /* Asegúrate de que esta ruta sea correcta: */
   background-image: url("./images/lab.jpg");
   background-size: cover;
   background-position: center;
@@ -193,7 +300,6 @@ body.rastros-page {
   padding: 0;
 }
 
-/* Etiqueta CLIENTES */
 .etiqueta-cliente {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
@@ -204,20 +310,17 @@ body.rastros-page {
   text-transform: uppercase;
 }
 
-/* 4. Sección de Botones (Derecha - Fondo Negro) - 60% */
 .seccion-botones {
-  flex: 3; /* 60% del total (3 de 5 partes) */
+  flex: 3;
   min-width: 60%;
   background-color: #000;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* El padding se ajusta por el header en móvil, ver media query */
   padding: 20px;
 }
 
-/* Estilo de los Botones de Rastros (Forma Ovalada) */
 .btn-menu-rastros {
   width: 80%;
   max-width: 450px;
@@ -235,193 +338,22 @@ body.rastros-page {
   box-shadow: none;
 }
 
-/* Responsividad para rastros.html */
-@media (max-width: 768px) {
-  .contenedor-principal {
-    flex-direction: column;
-  }
-
-  .seccion-imagen {
-    min-height: 250px;
-    min-width: 100%;
-    padding: 20px;
-  }
-
-  .seccion-botones {
-    min-width: 100%;
-    padding: 40px 20px;
-  }
-
-  .btn-menu-rastros {
-    width: 100%;
-    max-width: none;
-  }
+.btn-menu-rastros:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
 }
 
-/*
- * ========================================
- * ESTILOS PARA EL NUEVO HEADER DE RASTROS 💥
- * ========================================
- */
-
-.rastros-header {
-  position: fixed;
-  top: 0;
-  left: 40%; /* Comienza donde termina la imagen (40%) */
-  width: 60%;
-  height: 70px;
-  background-color: #111; /* Fondo oscuro */
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  z-index: 50;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.empresa-info-selector {
-  display: flex;
-  align-items: center;
-}
-
-.select-empresa-header {
-  padding: 8px 30px 8px 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background-color: #333;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-  appearance: none;
-  /* Icono de flecha blanco */
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23FFF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 10px;
-}
-
-.nombre-empresa-actual {
-  color: #bbb;
-  font-size: 14px;
-  margin-left: 15px;
-  font-weight: 500;
-}
-
-/* Ajustes para móviles */
-@media (max-width: 768px) {
-  .rastros-header {
-    left: 0;
-    width: 100%;
-    position: relative; /* Ocupa espacio normal en móvil */
-    height: 50px;
-    /* Asegura que no se superponga el contenido */
-    margin-bottom: 20px;
-  }
-
-  .contenedor-principal {
-    /* Desplaza todo el contenido para evitar solapamiento si el header es fixed */
-    padding-top: 0;
-  }
-}
-
-/*
- * ========================================
- * ESTILOS PARA EL MODAL DE INFORMACIÓN 
- * ========================================
- */
-
-.info-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0.3s, opacity 0.3s;
-}
-
-.info-modal-overlay.visible {
-  visibility: visible;
-  opacity: 1;
-}
-
-.info-modal-content {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
-  position: relative;
-  color: var(--color-primary);
-  animation: modalSlide 0.4s ease-out;
-}
-
-@keyframes modalSlide {
-  from {
-    opacity: 0;
-    transform: translateY(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.info-modal-content h2 {
-  margin-bottom: 20px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 10px;
-  color: #000;
-  font-size: 22px;
-}
-
-#info-empresa-detalle h3 {
-  margin-bottom: 10px;
-  color: var(--color-primary);
-}
-
-.info-modal-content p {
-  margin: 8px 0;
-  font-size: 15px;
-}
-
-.cerrar-modal {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  line-height: 1;
-  cursor: pointer;
-  color: #333;
-  font-weight: bold;
-  transition: color 0.2s;
-}
-
-.cerrar-modal:hover {
-  color: red;
-}
-/* * ========================================
- * ESTILOS PARA programacion.html
- * ========================================
- */
-
+/* ========================================
+ * ESTILOS PARA PROGRAMACIÓN (programacion.html)
+ * ======================================== */
 body.programacion-page {
-  /* Fondo para que la página de programación ocupe toda la vista */
   min-height: 100vh;
   background-color: #f0f0f0;
   display: block;
-  padding-top: 70px; /* Espacio para el header fijo */
+  padding-top: 70px;
 }
 
-/* Contenedor principal del formulario de Programación */
 .programacion-contenedor {
   width: 90%;
   max-width: 800px;
@@ -430,7 +362,7 @@ body.programacion-page {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  position: relative; /* Para posicionar el botón de guardar */
+  position: relative;
 }
 
 .programacion-contenedor h2 {
@@ -472,7 +404,6 @@ body.programacion-page {
   font-size: 14px;
 }
 
-/* Estilos de inputs y textarea */
 .programacion-contenedor input[type="date"],
 .programacion-contenedor input[type="time"],
 .programacion-contenedor textarea {
@@ -483,6 +414,7 @@ body.programacion-page {
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.2s;
+  font-family: inherit;
 }
 
 .programacion-contenedor input:focus,
@@ -495,9 +427,30 @@ body.programacion-page {
 .programacion-contenedor textarea {
   resize: vertical;
   min-height: 100px;
+  line-height: 1.5;
 }
 
-/* Botón de Guardar (Inferior Derecha) */
+#errores-formulario {
+  margin-bottom: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.error-item {
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 4px;
+  border-left: 4px solid #f44336;
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.error-item.warning {
+  border-left-color: #ff9800;
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
 .btn-guardar {
   position: absolute;
   bottom: 30px;
@@ -520,84 +473,19 @@ body.programacion-page {
   transform: translateY(-2px);
 }
 
-/* Ajuste del Header en programacion.html */
-.rastros-header {
-  /* En esta página el header debe estar fijo en TODA la parte superior */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%; /* Ocupa todo el ancho */
-  height: 70px;
-  background-color: #111;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  z-index: 50;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.rastros-header .empresa-info-selector {
-  justify-content: flex-start; /* Mover elementos a la izquierda */
-}
-
-.rastros-header .nombre-empresa-actual {
-  margin-left: 20px;
-  font-size: 16px;
-}
-
-.btn-regresar {
-  color: white;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 8px 15px;
-  border: 1px solid #444;
-  border-radius: 6px;
-  transition: background-color 0.2s;
-}
-
-.btn-regresar:hover {
-  background-color: #333;
-}
-
-/* Responsividad para móviles */
-@media (max-width: 768px) {
-  body.programacion-page {
-    padding-top: 50px; /* Ajuste para el header más pequeño */
-  }
-
-  .programacion-contenedor {
-    margin: 20px auto;
-    padding: 20px;
-  }
-
-  .form-row {
-    flex-direction: column; /* Apila fecha y hora */
-    gap: 15px;
-  }
-
-  .btn-guardar {
-    position: static; /* Quitar el fixed/absolute */
-    width: 100%;
-    margin-top: 30px;
-    box-shadow: none;
-  }
-}
-/* * ========================================
- * ESTILOS PARA actividades.html (TABLA)
- * ========================================
- */
-
+/* ========================================
+ * ESTILOS PARA ACTIVIDADES (actividades.html)
+ * ======================================== */
 body.actividades-page {
   min-height: 100vh;
   background-color: #f0f0f0;
   display: block;
-  padding-top: 70px; /* Espacio para el header fijo */
+  padding-top: 70px;
 }
 
 .actividades-contenedor {
   width: 95%;
-  max-width: 1200px; /* Más ancho para la tabla */
+  max-width: 1200px;
   margin: 40px auto;
   padding: 30px;
   background-color: white;
@@ -622,14 +510,17 @@ body.actividades-page {
 }
 
 .tabla-scroll {
-  overflow-x: auto; /* Permite scroll horizontal en dispositivos pequeños */
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
 }
 
 #tabla-actividades {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-top: 0;
   font-size: 14px;
+  min-width: 800px;
 }
 
 #tabla-actividades thead th {
@@ -639,6 +530,9 @@ body.actividades-page {
   text-align: left;
   text-transform: uppercase;
   font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 #tabla-actividades tbody tr {
@@ -655,7 +549,6 @@ body.actividades-page {
   vertical-align: middle;
 }
 
-/* Estilos para el estado */
 .estado-pendiente {
   color: orange;
   font-weight: 700;
@@ -671,19 +564,430 @@ body.actividades-page {
   font-weight: 700;
 }
 
-/* Estilos de Inputs en la tabla */
-#tabla-actividades input[type="text"],
-#tabla-actividades input[type="number"] {
+.input-tabla {
   width: 90px;
-  padding: 5px;
+  padding: 6px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 13px;
   text-align: center;
+  transition: border-color 0.2s;
 }
 
-/* Responsive para la tabla */
+.input-tabla:focus {
+  border-color: #000;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+#tabla-actividades input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+#mensaje-vacio {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 18px;
+  color: #777;
+  padding: 20px;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+/* ========================================
+ * ESTILOS PARA INFORMACIÓN EMPRESA (info_empresa.html)
+ * ======================================== */
+body.info-empresa-page {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-background);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.info-empresa-container {
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.info-container {
+  background-color: var(--color-surface);
+  padding: 30px;
+  border-radius: 10px;
+  width: 95%;
+  max-width: 1400px;
+  box-shadow: var(--shadow);
+  margin: 20px auto;
+  min-height: 600px;
+}
+
+.info-container h2 {
+  margin-bottom: 20px;
+  color: var(--color-primary);
+  text-align: center;
+  position: sticky;
+  top: 0;
+  background: var(--color-surface);
+  padding: 15px;
+  margin: -30px -30px 20px -30px;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-container h3 {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: #333;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 5px;
+}
+
+.info-container p {
+  margin-bottom: 12px;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.info-container strong {
+  color: #333;
+}
+
+.info-basica-container {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  margin-bottom: 20px;
+}
+
+.herramientas-busqueda {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  position: sticky;
+  top: 80px;
+  z-index: 5;
+  backdrop-filter: blur(10px);
+}
+
+.herramientas-busqueda input,
+.herramientas-busqueda select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  min-width: 200px;
+  font-family: inherit;
+}
+
+.herramientas-busqueda input:focus,
+.herramientas-busqueda select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.btn-limpiar {
+  padding: 10px 15px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.btn-limpiar:hover {
+  background: #5a6268;
+}
+
+.tabla-scroll-container {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-top: 10px;
+  position: relative;
+}
+
+.tabla-areas {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+}
+
+.tabla-areas thead {
+  background-color: var(--color-primary);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.tabla-areas th {
+  padding: 15px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  position: relative;
+}
+
+.tabla-areas th:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.tabla-areas th:last-child:after {
+  display: none;
+}
+
+.tabla-areas td {
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  background: white;
+}
+
+.tabla-areas tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.tabla-areas tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.seccion-tabla {
+  margin-top: 30px;
+}
+
+.seccion-tabla h3 {
+  color: var(--color-primary);
+  margin-bottom: 15px;
+  font-size: 18px;
+  position: sticky;
+  top: 150px;
+  background: var(--color-surface);
+  padding: 10px 0;
+  z-index: 4;
+}
+
+.boton-volver {
+  margin-top: 30px;
+  text-align: center;
+  position: sticky;
+  bottom: 20px;
+  background: var(--color-surface);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.boton-volver button {
+  padding: 12px 25px;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.boton-volver button:hover {
+  background-color: #45a049;
+}
+
+.scroll-indicator {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(76, 175, 80, 0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s;
+}
+
+.scroll-indicator:hover {
+  background: var(--color-primary);
+}
+
+#contador-resultados {
+  transition: all 0.3s ease;
+  position: sticky;
+  top: 200px;
+  background: #e3f2fd;
+  z-index: 3;
+  margin: -10px 0 10px 0;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border-left: 4px solid #2196f3;
+}
+
+.tabla-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tabla-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 0 8px 8px 0;
+}
+
+.tabla-scroll-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.tabla-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.info-basica-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.info-basica-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.info-basica-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.info-basica-container,
+.tabla-scroll-container {
+  scroll-behavior: smooth;
+}
+
+/* ========================================
+ * ESTILOS RESPONSIVE GLOBALES
+ * ======================================== */
 @media (max-width: 768px) {
+  /* Header responsive */
+  .rastros-header {
+    height: 50px;
+    padding: 0 15px;
+  }
+
+  .select-empresa-header {
+    font-size: 13px;
+    padding: 6px 25px 6px 8px;
+  }
+
+  .nombre-empresa-actual {
+    font-size: 13px;
+    margin-left: 10px;
+  }
+
+  /* Login responsive */
+  .contenedor-login {
+    max-width: 100%;
+    margin: 16px;
+    padding: 32px 20px;
+  }
+
+  .logo-contenedor {
+    height: 70px;
+    margin-bottom: 20px;
+  }
+
+  .input-login,
+  .btn-inicio-sesion {
+    height: 44px;
+    font-size: 14px;
+  }
+
+  /* Rastros responsive */
+  .rastros-header.rastros-specific {
+    left: 0;
+    width: 100%;
+    position: relative;
+    margin-bottom: 0;
+  }
+
+  .contenedor-principal {
+    flex-direction: column;
+  }
+
+  .seccion-imagen {
+    min-height: 250px;
+    min-width: 100%;
+    padding: 20px;
+  }
+
+  .seccion-botones {
+    min-width: 100%;
+    padding: 40px 20px;
+  }
+
+  .btn-menu-rastros {
+    width: 100%;
+    max-width: none;
+    height: 80px;
+    font-size: 16px;
+    margin: 15px 0;
+  }
+
+  .etiqueta-cliente {
+    font-size: 20px;
+    padding: 15px 25px;
+  }
+
+  /* Programación responsive */
+  body.programacion-page {
+    padding-top: 50px;
+  }
+
+  .programacion-contenedor {
+    margin: 20px auto;
+    padding: 20px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .btn-guardar {
+    position: static;
+    width: 100%;
+    margin-top: 30px;
+    box-shadow: none;
+  }
+
+  /* Actividades responsive */
+  body.actividades-page {
+    padding-top: 50px;
+  }
+
   .actividades-contenedor {
     width: 100%;
     margin: 20px 0;
@@ -692,98 +996,93 @@ body.actividades-page {
   }
 
   #tabla-actividades {
-    min-width: 700px; /* Fuerza el ancho mínimo para que el scroll funcione */
-  }
-}
-/* * ========================================
- * ESTILOS ESPECÍFICOS PARA LA TABLA DEL MODAL
- * (Añadir al final de styles.css)
- * ========================================
- */
-
-.productos-area-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  font-size: 14px;
-  /* La tabla debe ser responsive y estilizada */
-}
-
-.productos-area-table th,
-.productos-area-table td {
-  padding: 10px 8px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-.productos-area-table thead th {
-  background-color: #f5f5f5;
-  color: #333;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.productos-area-table tbody td:nth-child(2) {
-  /* Estilo para el Encargado */
-  font-weight: 600;
-  color: #000;
-}
-
-.productos-area-table tbody td:nth-child(3) {
-  /* Estilo para la lista de productos */
-  font-style: italic;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-/* Responsividad simple para la tabla dentro del modal */
-@media (max-width: 550px) {
-  .productos-area-table,
-  .productos-area-table thead,
-  .productos-area-table tbody,
-  .productos-area-table th,
-  .productos-area-table td,
-  .productos-area-table tr {
-    display: block;
+    min-width: 700px;
   }
 
-  .productos-area-table thead tr {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
+  .actividades-contenedor h2 {
+    font-size: 22px;
   }
 
-  .productos-area-table tr {
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-    border-radius: 5px;
+  /* Info empresa responsive */
+  .info-empresa-container {
+    padding: 10px;
   }
 
-  .productos-area-table td {
-    border: none;
-    border-bottom: 1px solid #eee;
-    position: relative;
-    padding-left: 50%;
-    text-align: right;
+  .info-container {
+    padding: 15px;
+    width: 100%;
   }
 
-  /* Etiquetas forzadas para móviles */
-  .productos-area-table td:before {
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    width: 45%;
-    padding-right: 10px;
-    white-space: nowrap;
-    content: attr(data-label); /* Usa el atributo data-label de <td> */
-    font-weight: bold;
-    text-align: left;
-    color: #333;
+  .herramientas-busqueda {
+    flex-direction: column;
+    align-items: stretch;
+    top: 60px;
   }
 
-  /* Ajuste para que la lista de productos se vea mejor */
-  .productos-area-table tbody td:nth-child(3) {
-    padding-left: 6px;
-    text-align: left;
+  .herramientas-busqueda input,
+  .herramientas-busqueda select {
+    min-width: auto;
+  }
+
+  .tabla-scroll-container {
+    max-height: 400px;
+  }
+
+  .scroll-indicator {
+    display: none;
+  }
+
+  .seccion-tabla h3 {
+    position: static;
+    background: transparent;
+  }
+
+  .boton-volver {
+    position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .programacion-contenedor {
+    width: 95%;
+    margin: 10px auto;
+    padding: 15px;
+  }
+
+  .programacion-contenedor h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .actividades-contenedor {
+    padding: 10px;
+  }
+
+  #empresa-actual-indicador {
+    font-size: 14px;
+  }
+
+  .info-container {
+    padding: 10px;
+  }
+
+  .info-container h2 {
+    font-size: 20px;
+    padding: 10px;
+    margin: -10px -10px 15px -10px;
+  }
+
+  .herramientas-busqueda {
+    padding: 10px;
+  }
+
+  .btn-menu-rastros {
+    height: 70px;
+    font-size: 14px;
+    margin: 12px 0;
+  }
+
+  .seccion-botones {
+    padding: 30px 15px;
   }
 }
