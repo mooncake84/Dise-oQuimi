@@ -6,70 +6,81 @@
     <title>Información de la Empresa</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <body class="info-empresa-page"></body>
+  <body class="info-empresa-page">
+    <header class="rastros-header">
+      <div class="empresa-info-selector">
+        <a href="rastros.html" class="btn-regresar">← Regresar a Menú</a>
+        <p id="nombre-empresa-actual" class="nombre-empresa-actual"></p>
+      </div>
+    </header>
+
     <!-- Contenedor global de errores -->
     <div id="global-error-container"></div>
 
-    <div class="info-container">
-      <h2>Información de la Empresa</h2>
-      <div id="info-empresa-detalle">
-        <p style="text-align: center; color: #666">
-          Cargando información de la empresa...
-        </p>
-      </div>
+    <div class="info-empresa-container">
+      <div class="info-container">
+        <h2>Información de la Empresa</h2>
+        <div id="info-empresa-detalle">
+          <p style="text-align: center; color: #666">
+            Cargando información de la empresa...
+          </p>
+        </div>
 
-      <!-- Sección de la tabla de áreas -->
-      <div class="seccion-tabla">
-        <h3>📊 Contactos por Área - Datos de Clientes</h3>
+        <!-- Sección de la tabla de áreas -->
+        <div class="seccion-tabla">
+          <h3>📊 Contactos por Área - Datos de Clientes</h3>
 
-        <!-- Herramientas de búsqueda y filtrado -->
-        <div class="herramientas-busqueda">
-          <input
-            type="text"
-            id="buscador-contactos"
-            placeholder="🔍 Buscar por área, encargado, producto..."
-          />
-          <select id="filtro-producto">
-            <option value="">Todos los productos</option>
-            <!-- Las opciones se cargarán dinámicamente -->
-          </select>
-          <select id="filtro-area">
-            <option value="">Todas las áreas</option>
-            <!-- Las opciones se cargarán dinámicamente -->
-          </select>
-          <button class="btn-limpiar" onclick="searchManager.limpiarFiltros()">
-            🗑️ Limpiar Filtros
+          <!-- Herramientas de búsqueda y filtrado -->
+          <div class="herramientas-busqueda">
+            <input
+              type="text"
+              id="buscador-contactos"
+              placeholder="🔍 Buscar por área, encargado, producto..."
+            />
+            <select id="filtro-producto">
+              <option value="">Todos los productos</option>
+              <!-- Las opciones se cargarán dinámicamente -->
+            </select>
+            <select id="filtro-area">
+              <option value="">Todas las áreas</option>
+              <!-- Las opciones se cargarán dinámicamente -->
+            </select>
+            <button
+              class="btn-limpiar"
+              onclick="searchManager.limpiarFiltros()"
+            >
+              🗑️ Limpiar Filtros
+            </button>
+          </div>
+
+          <div class="tabla-scroll-container">
+            <table class="tabla-areas" id="tabla-contactos-areas">
+              <thead>
+                <tr>
+                  <th>Área</th>
+                  <th>Producto Requerido</th>
+                  <th>Encargado del Área</th>
+                  <th>Datos del Encargado</th>
+                  <th>Correo Electrónico</th>
+                  <th>Teléfono</th>
+                </tr>
+              </thead>
+              <tbody id="cuerpo-tabla-contactos">
+                <!-- Los datos se cargarán dinámicamente con JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="boton-volver">
+          <button onclick="window.location.href='rastros.html'">
+            ← Volver al Menú Principal
           </button>
         </div>
-
-        <div class="tabla-scroll">
-          <table class="tabla-areas" id="tabla-contactos-areas">
-            <thead>
-              <tr>
-                <th>Área</th>
-                <th>Producto Requerido</th>
-                <th>Encargado del Área</th>
-                <th>Datos del Encargado</th>
-                <th>Correo Electrónico</th>
-                <th>Teléfono</th>
-              </tr>
-            </thead>
-            <tbody id="cuerpo-tabla-contactos">
-              <!-- Los datos se cargarán dinámicamente con JavaScript -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="boton-volver">
-        <button onclick="window.history.back()">
-          ← Volver al Menú Principal
-        </button>
       </div>
     </div>
 
-    <!-- Incluir los nuevos scripts -->
+    <!-- Incluir los scripts en el orden correcto -->
     <script src="data.js"></script>
     <script src="errorManager.js"></script>
     <script src="searchManager.js"></script>

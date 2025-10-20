@@ -1,181 +1,110 @@
-// searchManager.js - Sistema de búsqueda y filtrado
-class SearchManager {
-  constructor() {
-    this.filtrosActivos = {
-      texto: "",
-      producto: "",
-      area: "",
-    };
-  }
+// searchManager.js - Gestión de búsqueda y filtrado
+const searchManager = {
+  inicializarBuscador: function (inputId, tablaId, callback) {
+    const buscador = document.getElementById(inputId);
+    if (!buscador) return;
 
-  // Búsqueda en tiempo real con debounce
-  inicializarBuscador(inputId, tablaId, callback) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
+    buscador.addEventListener(
+      "input",
+      function (e) {
+        this.filtrarTabla(tablaId, e.target.value, callback);
+      }.bind(this)
+    );
+  },
 
-    // Debounce para evitar búsquedas excesivas
-    const buscarConDebounce = this.debounce((termino) => {
-      this.filtrosActivos.texto = termino;
-      this.aplicarFiltros(tablaId, callback);
-    }, 300);
-
-    input.addEventListener("input", (e) => {
-      buscarConDebounce(e.target.value.trim().toLowerCase());
-    });
-  }
-
-  // Filtrado por producto
-  inicializarFiltroProducto(selectId, tablaId, callback) {
-    const select = document.getElementById(selectId);
-    if (!select) return;
-
-    select.addEventListener("change", (e) => {
-      this.filtrosActivos.producto = e.target.value;
-      this.aplicarFiltros(tablaId, callback);
-    });
-  }
-
-  // Filtrado por área
-  inicializarFiltroArea(selectId, tablaId, callback) {
-    const select = document.getElementById(selectId);
-    if (!select) return;
-
-    select.addEventListener("change", (e) => {
-      this.filtrosActivos.area = e.target.value;
-      this.aplicarFiltros(tablaId, callback);
-    });
-  }
-
-  // Aplicar todos los filtros activos
-  aplicarFiltros(tablaId, callback) {
+  filtrarTabla: function (tablaId, texto, callback) {
     const tabla = document.getElementById(tablaId);
     if (!tabla) return;
 
     const filas = tabla.querySelectorAll("tbody tr");
     let filasVisibles = 0;
+    const textoLower = texto.toLowerCase();
 
     filas.forEach((fila) => {
       const textoFila = fila.textContent.toLowerCase();
-      const productoFila = fila.cells[1]?.textContent.toLowerCase() || "";
-      const areaFila = fila.cells[0]?.textContent.toLowerCase() || "";
-
-      const coincideTexto =
-        !this.filtrosActivos.texto ||
-        textoFila.includes(this.filtrosActivos.texto);
-
-      const coincideProducto =
-        !this.filtrosActivos.producto ||
-        productoFila.includes(this.filtrosActivos.producto.toLowerCase());
-
-      const coincideArea =
-        !this.filtrosActivos.area ||
-        areaFila.includes(this.filtrosActivos.area.toLowerCase());
-
-      const mostrarFila = coincideTexto && coincideProducto && coincideArea;
-
-      fila.style.display = mostrarFila ? "" : "none";
-      if (mostrarFila) filasVisibles++;
+      const esVisible = textoLower === "" || textoFila.includes(textoLower);
+      fila.style.display = esVisible ? "" : "none";
+      if (esVisible) filasVisibles++;
     });
 
-    // Ejecutar callback si se proporciona (para actualizar contadores, etc.)
-    if (callback && typeof callback === "function") {
-      callback(filasVisibles);
-    }
+    if (callback) callback(filasVisibles);
+  },
 
-    this.mostrarResultadosFiltro(filasVisibles, filas.length);
-  }
+  generarOpcionesFiltro: function (companyId, tipo) {
+    const empresa = DATOS_EMPRESAS[companyId];
+    if (!empresa || !empresa.areas) return [];
 
-  mostrarResultadosFiltro(visibles, total) {
-    // Buscar o crear contador de resultados
-    let contador = document.getElementById("contador-resultados");
-    if (!contador) {
-      contador = document.createElement("div");
-      contador.id = "contador-resultados";
-      contador.style.cssText = `
-                padding: 10px;
-                margin: 10px 0;
-                background: #e3f2fd;
-                border-radius: 5px;
-                font-size: 14px;
-                color: #1976d2;
-            `;
-
-      // Insertar después del buscador o al inicio de la tabla
-      const buscador = document.querySelector(".herramientas-busqueda");
-      if (buscador) {
-        buscador.parentNode.insertBefore(contador, buscador.nextSibling);
+    const valores = new Set();
+    empresa.areas.forEach((area) => {
+      if (tipo === "producto" && area.productoRequerido) {
+        valores.add(area.productoRequerido);
+      } else if (tipo === "area" && area.area) {
+        valores.add(area.area);
       }
-    }
+    });
 
-    if (visibles === total) {
-      contador.textContent = `Mostrando todos los ${total} contactos`;
-    } else {
-      contador.textContent = `Mostrando ${visibles} de ${total} contactos`;
+    return Array.from(valores).sort();
+  },
 
-      if (visibles === 0) {
-        contador.style.background = "#ffebee";
-        contador.style.color = "#c62828";
-        contador.textContent = `No se encontraron contactos con los filtros aplicados`;
-      } else {
-        contador.style.background = "#e3f2fd";
-        contador.style.color = "#1976d2";
+  inicializarFiltroProducto: function (selectId, tablaId) {
+    this.inicializarFiltroGenerico(selectId, tablaId, 1); // Columna 1 = Producto
+  },
+
+  inicializarFiltroArea: function (selectId, tablaId) {
+    this.inicializarFiltroGenerico(selectId, tablaId, 0); // Columna 0 = Área
+  },
+
+  inicializarFiltroGenerico: function (selectId, tablaId, columnaIndex) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    select.addEventListener(
+      "change",
+      function (e) {
+        this.aplicarFiltroColumna(tablaId, columnaIndex, e.target.value);
+      }.bind(this)
+    );
+  },
+
+  aplicarFiltroColumna: function (tablaId, columnaIndex, valorFiltro) {
+    const tabla = document.getElementById(tablaId);
+    if (!tabla) return;
+
+    const filas = tabla.querySelectorAll("tbody tr");
+
+    filas.forEach((fila) => {
+      const celdas = fila.querySelectorAll("td");
+      if (celdas.length > columnaIndex) {
+        const textoCelda = celdas[columnaIndex].textContent.trim();
+        const coincide = valorFiltro === "" || textoCelda === valorFiltro;
+        fila.style.display = coincide ? "" : "none";
       }
-    }
-  }
+    });
+  },
 
-  // Limpiar todos los filtros
-  limpiarFiltros() {
-    this.filtrosActivos = {
-      texto: "",
-      producto: "",
-      area: "",
-    };
-
-    // Limpiar inputs
+  limpiarFiltros: function () {
+    // Limpiar campos de búsqueda
     const buscador = document.getElementById("buscador-contactos");
     if (buscador) buscador.value = "";
 
+    // Limpiar selects
     const filtroProducto = document.getElementById("filtro-producto");
-    if (filtroProducto) filtroProducto.value = "";
-
     const filtroArea = document.getElementById("filtro-area");
+    if (filtroProducto) filtroProducto.value = "";
     if (filtroArea) filtroArea.value = "";
 
-    // Re-aplicar filtros (mostrar todo)
-    this.aplicarFiltros("cuerpo-tabla-contactos");
-  }
-
-  // Debounce para optimizar búsquedas
-  debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  }
-
-  // Generar opciones de filtro dinámicamente
-  generarOpcionesFiltro(empresaId, tipo) {
-    if (!DATOS_EMPRESAS[empresaId]) return [];
-
-    const areas = DATOS_EMPRESAS[empresaId].areas;
-    const opciones = new Set();
-
-    areas.forEach((area) => {
-      if (tipo === "producto") {
-        opciones.add(area.productoRequerido);
-      } else if (tipo === "area") {
-        opciones.add(area.area);
-      }
+    // Mostrar todas las filas
+    const tablas = document.querySelectorAll(".tabla-areas");
+    tablas.forEach((tabla) => {
+      const filas = tabla.querySelectorAll("tbody tr");
+      filas.forEach((fila) => {
+        fila.style.display = "";
+      });
     });
 
-    return Array.from(opciones).sort();
-  }
-}
-
-// Instancia global
-const searchManager = new SearchManager();
+    // Mostrar mensaje de filtros limpiados
+    if (typeof errorManager !== "undefined") {
+      errorManager.mostrarError("Filtros limpiados correctamente", "success");
+    }
+  },
+};

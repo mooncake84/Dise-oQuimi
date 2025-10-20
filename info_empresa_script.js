@@ -28,6 +28,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       console.log("Empresa seleccionada:", selectedCompany);
 
+      // Validar que DATOS_EMPRESAS existe
+      if (typeof DATOS_EMPRESAS === "undefined") {
+        throw new Error("Datos de empresas no cargados");
+      }
+
       // Validar datos de la empresa
       errorManager.validarDatosEmpresa(selectedCompany);
 
@@ -35,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Construir el HTML con los datos de la empresa
       const infoHTML = `
-        <div class="info-basica">
+        <div class="info-basica-container">
           <h3>${datos.nombre}</h3>
           <p><strong>Giro:</strong> ${datos.giro}</p>
           <p><strong>Dirección:</strong> ${datos.direccion}</p>
@@ -58,10 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
       errorManager.mostrarErrorCargaEmpresa(selectedCompany);
 
       infoEmpresaDetalle.innerHTML = `
-        <p class="error-mensaje">
+        <div class="error-mensaje">
           Error: No se pudo cargar la información de la empresa.<br>
           Detalle: ${error.message}
-        </p>
+        </div>
       `;
     }
   }
@@ -92,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <td>${contacto.productoRequerido}</td>
           <td>${contacto.encargado}</td>
           <td>${contacto.datosEncargado}</td>
-          <td><a href="mailto:${contacto.correo}" style="color: #2196F3;">${contacto.correo}</a></td>
+          <td><a href="mailto:${contacto.correo}" style="color: #2196F3; text-decoration: none;">${contacto.correo}</a></td>
           <td>${contacto.telefono}</td>
         `;
         cuerpoTablaContactos.appendChild(fila);
@@ -106,6 +111,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Inicializar sistema de búsqueda y filtrado
   function inicializarBusquedaYFiltros(companyId) {
     try {
+      // Verificar que searchManager existe
+      if (typeof searchManager === "undefined") {
+        throw new Error("SearchManager no está disponible");
+      }
+
       // Generar opciones de filtro dinámicamente
       const productos = searchManager.generarOpcionesFiltro(
         companyId,
@@ -114,30 +124,34 @@ document.addEventListener("DOMContentLoaded", function () {
       const areas = searchManager.generarOpcionesFiltro(companyId, "area");
 
       // Llenar filtro de productos
-      filtroProducto.innerHTML =
-        '<option value="">Todos los productos</option>';
-      productos.forEach((producto) => {
-        const option = document.createElement("option");
-        option.value = producto;
-        option.textContent = producto;
-        filtroProducto.appendChild(option);
-      });
+      if (filtroProducto) {
+        filtroProducto.innerHTML =
+          '<option value="">Todos los productos</option>';
+        productos.forEach((producto) => {
+          const option = document.createElement("option");
+          option.value = producto;
+          option.textContent = producto;
+          filtroProducto.appendChild(option);
+        });
+      }
 
       // Llenar filtro de áreas
-      filtroArea.innerHTML = '<option value="">Todas las áreas</option>';
-      areas.forEach((area) => {
-        const option = document.createElement("option");
-        option.value = area;
-        option.textContent = area;
-        filtroArea.appendChild(option);
-      });
+      if (filtroArea) {
+        filtroArea.innerHTML = '<option value="">Todas las áreas</option>';
+        areas.forEach((area) => {
+          const option = document.createElement("option");
+          option.value = area;
+          option.textContent = area;
+          filtroArea.appendChild(option);
+        });
+      }
 
       // Inicializar buscador
       searchManager.inicializarBuscador(
         "buscador-contactos",
         "tabla-contactos-areas",
         function (filasVisibles) {
-          console.log(`Filas visibles: ${filasVisibles}`);
+          console.log(`Filas visibles después de búsqueda: ${filasVisibles}`);
         }
       );
 
