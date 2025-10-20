@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const actividadesBody = document.getElementById("actividades-body");
   const mensajeVacio = document.getElementById("mensaje-vacio");
 
-  // Función para obtener los datos de la empresa (los mismos)
+  // Datos de las empresas
   const datosEmpresas = {
     empresa1: { nombre: "Empresa A (Datos Provisional X)" },
     empresa2: { nombre: "Empresa B (Datos Provisional X)" },
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let currentCompanyId;
 
-  // 1. Cargar y mostrar la empresa seleccionada
+  // Cargar y mostrar la empresa seleccionada
   function cargarEmpresaActual() {
     currentCompanyId = localStorage.getItem("selectedCompany") || "empresa1";
     const nombreEmpresa = datosEmpresas[currentCompanyId]
@@ -37,18 +37,38 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("actividadesProgramadas", JSON.stringify(actividades));
   }
 
-  // 2. Cargar y renderizar la tabla de actividades
+  // Mostrar mensaje temporal
+  function mostrarMensaje(mensaje, tipo = "success") {
+    const mensajeElement = document.createElement("div");
+    mensajeElement.textContent = mensaje;
+    mensajeElement.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: ${tipo === "success" ? "#4CAF50" : "#f44336"};
+      color: white;
+      border-radius: 5px;
+      z-index: 1000;
+      animation: fadeInOut 3s ease-in-out;
+    `;
+
+    document.body.appendChild(mensajeElement);
+
+    setTimeout(() => {
+      document.body.removeChild(mensajeElement);
+    }, 3000);
+  }
+
+  // Cargar y renderizar la tabla de actividades
   function renderizarTabla() {
-    // 1. Filtrar actividades solo para la empresa actual
     const todasLasActividades = obtenerActividades();
     const actividadesFiltradas = todasLasActividades.filter(
       (act) => act.empresaId === currentCompanyId
     );
 
-    // 2. Limpiar la tabla
     actividadesBody.innerHTML = "";
 
-    // 3. Mostrar/ocultar mensaje de tabla vacía
     if (actividadesFiltradas.length === 0) {
       mensajeVacio.style.display = "block";
       return;
@@ -56,19 +76,15 @@ document.addEventListener("DOMContentLoaded", function () {
       mensajeVacio.style.display = "none";
     }
 
-    // 4. Construir las filas de la tabla
     actividadesFiltradas.forEach((act) => {
-      // Determinar si los checkboxes deben estar marcados
       const isCompletado = act.estado === "Completado";
       const isRetraso = act.estado === "Retraso";
 
-      // Determinar clase de estilo para el estado
       let estadoClass = "";
       if (isCompletado) estadoClass = "estado-completado";
       else if (isRetraso) estadoClass = "estado-retraso";
       else estadoClass = "estado-pendiente";
 
-      // HTML para la fila
       const rowHTML = `
             <tr>
                 <td>${act.fecha} <br> (${act.hora})</td>
@@ -112,19 +128,17 @@ document.addEventListener("DOMContentLoaded", function () {
       actividadesBody.insertAdjacentHTML("beforeend", rowHTML);
     });
 
-    // 5. Agregar event listeners después de renderizar
     agregarEventListeners();
   }
 
-  // 3. Lógica para manejar interacciones del usuario
+  // Lógica para manejar interacciones del usuario
   function agregarEventListeners() {
-    // Escucha todos los cambios en la tabla (usando delegación de eventos)
     actividadesBody.addEventListener("change", function (event) {
       const target = event.target;
       const id = parseInt(target.getAttribute("data-id"));
       const field = target.getAttribute("data-field");
 
-      if (!id) return; // No es un elemento rastreable
+      if (!id) return;
 
       if (field === "completado") {
         manejarCompletado(id, target.checked);
@@ -137,21 +151,28 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function manejarCompletado(id, isChecked) {
+    if (
+      isChecked &&
+      !confirm(
+        "¿Estás seguro de que quieres marcar esta actividad como COMPLETADA?"
+      )
+    ) {
+      // Si el usuario cancela, volver a renderizar para desmarcar el checkbox
+      renderizarTabla();
+      return;
+    }
+
     let actividades = obtenerActividades();
     const index = actividades.findIndex((act) => act.id === id);
     if (index !== -1) {
       if (isChecked) {
         actividades[index].estado = "Completado";
-        // Desmarcar Retraso si estaba marcado
-        if (actividades[index].estado === "Retraso") {
-          actividades[index].estado = "Completado";
-        }
       } else if (actividades[index].estado === "Completado") {
-        // Si se desmarca, regresa al estado Pendiente
         actividades[index].estado = "Pendiente";
       }
       guardarActividades(actividades);
-      renderizarTabla(); // Vuelve a dibujar para actualizar estados y checkboxes
+      renderizarTabla();
+      mostrarMensaje("Actividad actualizada correctamente");
     }
   }
 
@@ -161,15 +182,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (index !== -1) {
       if (isChecked) {
         actividades[index].estado = "Retraso";
-        // Desmarcar Completado si estaba marcado
-        if (actividades[index].estado === "Completado") {
-          actividades[index].estado = "Retraso";
-        }
       } else if (actividades[index].estado === "Retraso") {
         actividades[index].estado = "Pendiente";
       }
       guardarActividades(actividades);
       renderizarTabla();
+      mostrarMensaje("Actividad actualizada correctamente");
     }
   }
 
@@ -179,11 +197,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (index !== -1) {
       actividades[index][campo] = valor;
       guardarActividades(actividades);
-      console.log(`Actividad ${id} actualizada. Campo ${campo}: ${valor}`);
+      mostrarMensaje(
+        `${
+          campo === "pedidoEntregado" ? "Pedido" : "Cantidad"
+        } actualizado correctamente`
+      );
     }
   }
 
-  // --- INICIALIZACIÓN ---
+  // Inicialización
   cargarEmpresaActual();
   renderizarTabla();
 });

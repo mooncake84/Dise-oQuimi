@@ -1,15 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
   const nombreEmpresaActual = document.getElementById("nombre-empresa-actual");
   const btnGuardar = document.getElementById("btn-guardar-actividad");
+  const fechaInput = document.getElementById("fecha-actividad");
 
-  // Función para obtener los datos de la empresa (los mismos de rastros_script.js)
+  // Datos de las empresas
   const datosEmpresas = {
     empresa1: { nombre: "Empresa A (Datos Provisional X)" },
     empresa2: { nombre: "Empresa B (Datos Provisional X)" },
     empresa3: { nombre: "Empresa C (Datos Provisional X)" },
   };
 
-  // 1. Mostrar la empresa seleccionada actualmente
+  // Establecer fecha mínima como hoy
+  function establecerFechaMinima() {
+    const hoy = new Date();
+    const fechaFormateada = hoy.toISOString().split("T")[0];
+    fechaInput.setAttribute("min", fechaFormateada);
+  }
+
+  // Mostrar la empresa seleccionada actualmente
   function cargarEmpresaActual() {
     const selectedCompanyId =
       localStorage.getItem("selectedCompany") || "empresa1";
@@ -23,9 +31,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const currentCompanyId = cargarEmpresaActual();
 
-  // 2. Lógica para el botón GUARDAR
+  // Validar que la fecha no sea del pasado
+  function validarFecha() {
+    const fechaSeleccionada = new Date(fechaInput.value);
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0); // Resetear horas para comparar solo fechas
+
+    if (fechaSeleccionada < hoy) {
+      alert("No puedes programar actividades para fechas pasadas.");
+      fechaInput.value = "";
+      return false;
+    }
+    return true;
+  }
+
+  // Lógica para el botón GUARDAR
   btnGuardar.addEventListener("click", function () {
-    const fecha = document.getElementById("fecha-actividad").value;
+    const fecha = fechaInput.value;
     const hora = document.getElementById("hora-actividad").value;
     const objetivo = document.getElementById("objetivo-visita").value;
     const datos = document.getElementById("datos-adicionales").value;
@@ -37,13 +59,18 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    // Validar fecha
+    if (!validarFecha()) {
+      return;
+    }
+
     // Obtener las actividades existentes o un array vacío
     const actividadesString = localStorage.getItem("actividadesProgramadas");
     let actividades = actividadesString ? JSON.parse(actividadesString) : [];
 
-    // 💥 JSON (Objeto) con la nueva actividad a guardar 💥
+    // Crear nueva actividad
     const nuevaActividad = {
-      id: Date.now(), // ID único basado en el timestamp
+      id: Date.now(),
       empresaId: currentCompanyId,
       empresaNombre: nombreEmpresaActual.textContent.replace(
         "Empresa Actual: ",
@@ -54,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
       objetivo: objetivo,
       datosAdicionales:
         datos || "No se especificaron datos adicionales a tomar.",
-      estado: "Pendiente", // Nuevo campo de estado
+      estado: "Pendiente",
       pedidoEntregado: "",
       cantidadEntregada: "",
       timestampGuardado: new Date().toISOString(),
@@ -77,4 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("objetivo-visita").value = "";
     document.getElementById("datos-adicionales").value = "";
   });
+
+  // Inicializar fecha mínima
+  establecerFechaMinima();
 });

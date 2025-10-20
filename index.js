@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // 💥 ELIMINADO: selectEmpresas ha sido removido. 💥
   const btnInicioSesion = document.getElementById("iniciar-sesion-btn");
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
 
-  // Lógica de transición del carrusel (mover esto a index.js para un proyecto limpio)
+  // Lógica de transición del carrusel
   let slideIndex = 0;
   const slides = document.querySelectorAll(".carrusel-item");
 
@@ -14,17 +13,14 @@ document.addEventListener("DOMContentLoaded", function () {
     slides[slideIndex].classList.add("active");
   }
 
-  setInterval(nextSlide, 8000); // Cambia cada 8 segundos
+  setInterval(nextSlide, 8000);
 
   btnInicioSesion.addEventListener("click", function () {
     const email = emailInput.value;
     const password = passwordInput.value;
 
     if (email && password) {
-      // 💥 CRÍTICO: GUARDAR LA EMPRESA POR DEFECTO (EMPRESA A) 💥
-      // Al no haber selector, asumimos una empresa inicial (Empresa A) al iniciar sesión.
       localStorage.setItem("selectedCompany", "empresa1");
-
       const paginaDeDestino = "rastros.html";
       window.location.href = paginaDeDestino;
     } else {

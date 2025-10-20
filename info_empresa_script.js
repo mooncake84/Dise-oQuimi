@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const infoEmpresaDetalle = document.getElementById("info-empresa-detalle");
 
-  // DATOS PROVISIONALES 'X' PARA LAS EMPRESAS
+  // Datos de las empresas
   const datosEmpresas = {
     empresa1: {
       nombre: "Empresa A (Datos Provisional X)",
@@ -38,12 +38,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Obtener el ID de la empresa desde la URL
   const selectedCompany = obtenerParametroUrl("companyId");
 
-  infoEmpresaDetalle.innerHTML = ""; // Limpiar el mensaje de "Cargando..."
+  infoEmpresaDetalle.innerHTML = "";
 
   if (selectedCompany && datosEmpresas[selectedCompany]) {
     const datos = datosEmpresas[selectedCompany];
 
-    // CONSTRUIR EL HTML con los datos de la empresa
+    // Construir el HTML con los datos de la empresa
     const infoHTML = `
       <h3>${datos.nombre}</h3>
       <p><strong>Giro:</strong> ${datos.giro}</p>
@@ -60,4 +60,3 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
   }
 });
-s;
