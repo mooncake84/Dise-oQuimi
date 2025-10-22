@@ -1,4 +1,4 @@
-// info_empresa_script.js - Actualizado con sistema de edición (solo tablas)
+// info_empresa_script.js - Actualizado con sistema de edición (solo tablas) - MEJORADO
 document.addEventListener("DOMContentLoaded", function () {
   const infoEmpresaDetalle = document.getElementById("info-empresa-detalle");
   const cuerpoTablaContactos = document.getElementById(
@@ -34,7 +34,14 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Validar datos de la empresa
-      errorManager.validarDatosEmpresa(selectedCompany);
+      if (typeof errorManager !== "undefined") {
+        errorManager.validarDatosEmpresa(selectedCompany);
+      } else {
+        // Validación básica si errorManager no está disponible
+        if (!DATOS_EMPRESAS[selectedCompany]) {
+          throw new Error(`Empresa ${selectedCompany} no encontrada`);
+        }
+      }
 
       const datos = DATOS_EMPRESAS[selectedCompany];
 
@@ -60,12 +67,24 @@ document.addEventListener("DOMContentLoaded", function () {
       inicializarBusquedaYFiltros(selectedCompany);
 
       // Inicializar sistema de edición (solo para tablas)
-      if (typeof editManager !== "undefined") {
-        editManager.inicializar();
-      }
+      setTimeout(() => {
+        if (typeof editManager !== "undefined") {
+          const exito = editManager.inicializar();
+          if (!exito) {
+            console.warn(
+              "El sistema de edición no se pudo inicializar correctamente"
+            );
+          }
+        } else {
+          console.warn("editManager no está disponible");
+        }
+      }, 500);
     } catch (error) {
       console.error("Error cargando información de empresa:", error);
-      errorManager.mostrarErrorCargaEmpresa(selectedCompany);
+
+      if (typeof errorManager !== "undefined") {
+        errorManager.mostrarErrorCargaEmpresa(selectedCompany);
+      }
 
       infoEmpresaDetalle.innerHTML = `
         <div class="error-mensaje">
@@ -113,7 +132,9 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     } catch (error) {
       console.error("Error cargando contactos:", error);
-      errorManager.mostrarError("Error al cargar los contactos por área");
+      if (typeof errorManager !== "undefined") {
+        errorManager.mostrarError("Error al cargar los contactos por área");
+      }
     }
   }
 
@@ -122,7 +143,8 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       // Verificar que searchManager existe
       if (typeof searchManager === "undefined") {
-        throw new Error("SearchManager no está disponible");
+        console.warn("SearchManager no está disponible");
+        return;
       }
 
       // Generar opciones de filtro dinámicamente
@@ -175,7 +197,9 @@ document.addEventListener("DOMContentLoaded", function () {
       );
     } catch (error) {
       console.error("Error inicializando búsqueda:", error);
-      errorManager.mostrarError("Error al inicializar sistema de búsqueda");
+      if (typeof errorManager !== "undefined") {
+        errorManager.mostrarError("Error al inicializar sistema de búsqueda");
+      }
     }
   }
 

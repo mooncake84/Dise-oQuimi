@@ -1,18 +1,47 @@
-// editManager.js - Gestión de edición de datos de empresa (solo tablas)
+// editManager.js - Gestión de edición de datos de empresa (solo tablas) - CORREGIDO
 const editManager = {
   modoEdicion: false,
   companyIdActual: null,
 
   // Inicializar sistema de edición
   inicializar: function () {
+    // Verificar dependencias
+    if (typeof errorManager === "undefined") {
+      console.error("errorManager no está disponible");
+      // Proveer un fallback básico
+      window.errorManager = {
+        mostrarError: (msg, tipo) => {
+          const method = tipo === "error" ? "error" : "log";
+          console[method](msg);
+          alert(msg); // Fallback simple
+        },
+      };
+    }
+
+    if (typeof guardarCambiosEmpresa === "undefined") {
+      console.error("guardarCambiosEmpresa no está disponible");
+      return false;
+    }
+
     this.crearBotonesEdicion();
     this.agregarEventListeners();
+    return true;
   },
 
   // Crear botones de edición
   crearBotonesEdicion: function () {
     const seccionTabla = document.querySelector(".seccion-tabla h3");
-    if (!seccionTabla) return;
+    if (!seccionTabla) {
+      console.warn(
+        "No se encontró la sección de tabla para agregar botones de edición"
+      );
+      return;
+    }
+
+    // Verificar si ya existen botones
+    if (document.getElementById("btn-activar-edicion")) {
+      return;
+    }
 
     // Crear contenedor de botones
     const botonesContainer = document.createElement("div");
@@ -49,6 +78,7 @@ const editManager = {
 
     seccionTabla.style.display = "flex";
     seccionTabla.style.alignItems = "center";
+    seccionTabla.style.flexWrap = "wrap";
     seccionTabla.appendChild(botonesContainer);
   },
 
@@ -65,71 +95,118 @@ const editManager = {
         this.eliminarFila(e.target);
       }
     });
+
+    // Event listener para el botón de nueva fila (se agrega dinámicamente)
+    document.addEventListener("click", (e) => {
+      if (e.target.id === "btn-nueva-fila") {
+        this.agregarNuevaFila();
+      }
+    });
   },
 
   // Activar modo edición
   activarModoEdicion: function () {
-    this.modoEdicion = true;
-    this.companyIdActual = this.obtenerCompanyIdActual();
+    try {
+      this.modoEdicion = true;
+      this.companyIdActual = this.obtenerCompanyIdActual();
 
-    // Mostrar/ocultar botones
-    document.getElementById("btn-activar-edicion").style.display = "none";
-    document.getElementById("btn-guardar-cambios").style.display =
-      "inline-block";
-    document.getElementById("btn-cancelar-edicion").style.display =
-      "inline-block";
+      if (!this.companyIdActual) {
+        throw new Error("No se pudo determinar la empresa actual");
+      }
 
-    // Agregar controles a la tabla
-    this.agregarControlesTabla();
+      // Mostrar/ocultar botones
+      document.getElementById("btn-activar-edicion").style.display = "none";
+      document.getElementById("btn-guardar-cambios").style.display =
+        "inline-block";
+      document.getElementById("btn-cancelar-edicion").style.display =
+        "inline-block";
 
-    errorManager.mostrarError(
-      "Modo edición activado. Puede modificar los datos de la tabla.",
-      "info"
-    );
+      // Agregar controles a la tabla
+      this.agregarControlesTabla();
+
+      if (typeof errorManager !== "undefined") {
+        errorManager.mostrarError(
+          "Modo edición activado. Puede modificar los datos de la tabla.",
+          "info"
+        );
+      }
+    } catch (error) {
+      console.error("Error activando modo edición:", error);
+      if (typeof errorManager !== "undefined") {
+        errorManager.mostrarError(
+          "Error al activar modo edición: " + error.message
+        );
+      }
+    }
   },
 
   // Obtener companyId actual
   obtenerCompanyIdActual: function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    let companyId = urlParams.get("companyId");
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      let companyId = urlParams.get("companyId");
 
-    if (!companyId) {
-      companyId = localStorage.getItem("selectedCompany") || "empresa1";
+      if (!companyId) {
+        companyId = localStorage.getItem("selectedCompany") || "empresa1";
+      }
+
+      // Validar que la empresa existe
+      if (!DATOS_EMPRESAS[companyId]) {
+        throw new Error(`Empresa ${companyId} no encontrada`);
+      }
+
+      return companyId;
+    } catch (error) {
+      console.error("Error obteniendo companyId:", error);
+      return "empresa1"; // Fallback
     }
-
-    return companyId;
   },
 
   // Agregar controles a la tabla
   agregarControlesTabla: function () {
     const tabla = document.getElementById("tabla-contactos-areas");
-    if (!tabla) return;
+    if (!tabla) {
+      console.error("No se encontró la tabla de contactos");
+      return;
+    }
 
-    // Agregar columna de acciones al thead
+    // Agregar columna de acciones al thead si no existe
     const thead = tabla.querySelector("thead tr");
-    const thAcciones = document.createElement("th");
-    thAcciones.textContent = "Acciones";
-    thAcciones.style.width = "120px";
-    thead.appendChild(thAcciones);
+    if (
+      !thead.querySelector("th:last-child").textContent.includes("Acciones")
+    ) {
+      const thAcciones = document.createElement("th");
+      thAcciones.textContent = "Acciones";
+      thAcciones.style.width = "120px";
+      thAcciones.style.minWidth = "100px";
+      thead.appendChild(thAcciones);
+    }
 
     // Agregar controles a cada fila
     const filas = tabla.querySelectorAll("tbody tr");
     filas.forEach((fila, index) => {
-      const tdAcciones = document.createElement("td");
-      tdAcciones.className = "acciones-tabla";
+      // Verificar si ya tiene columna de acciones
+      if (!fila.querySelector(".acciones-tabla")) {
+        const tdAcciones = document.createElement("td");
+        tdAcciones.className = "acciones-tabla";
 
-      tdAcciones.innerHTML = `
-        <button class="btn-eliminar-fila" data-index="${index}" title="Eliminar área">🗑️</button>
-      `;
+        tdAcciones.innerHTML = `
+          <button class="btn-eliminar-fila" data-index="${index}" title="Eliminar área">🗑️</button>
+        `;
 
-      fila.appendChild(tdAcciones);
+        fila.appendChild(tdAcciones);
+      }
 
-      // Hacer celdas editables
-      this.hacerFilaEditable(fila);
+      // Hacer celdas editables si no lo están ya
+      if (!fila.querySelector(".input-tabla-editable")) {
+        this.hacerFilaEditable(fila);
+      }
     });
 
-    // Agregar botón para nueva fila
-    this.agregarBotonNuevaFila();
+    // Agregar botón para nueva fila si no existe
+    if (!document.getElementById("btn-nueva-fila")) {
+      this.agregarBotonNuevaFila();
+    }
   },
 
   // Hacer fila editable
@@ -150,21 +227,21 @@ const editManager = {
   // Agregar botón para nueva fila
   agregarBotonNuevaFila: function () {
     const contenedorTabla = document.querySelector(".seccion-tabla");
+    if (!contenedorTabla) return;
+
     const botonNuevaFila = document.createElement("button");
     botonNuevaFila.id = "btn-nueva-fila";
     botonNuevaFila.innerHTML = "➕ Agregar Nueva Área";
     botonNuevaFila.className = "btn-nueva-fila";
 
     contenedorTabla.appendChild(botonNuevaFila);
-
-    botonNuevaFila.addEventListener("click", () => {
-      this.agregarNuevaFila();
-    });
   },
 
   // Agregar nueva fila a la tabla
   agregarNuevaFila: function () {
     const tbody = document.getElementById("cuerpo-tabla-contactos");
+    if (!tbody) return;
+
     const nuevaFila = document.createElement("tr");
 
     nuevaFila.innerHTML = `
@@ -187,7 +264,9 @@ const editManager = {
     const fila = boton.closest("tr");
     if (fila && confirm("¿Está seguro de que desea eliminar esta área?")) {
       fila.remove();
-      errorManager.mostrarError("Área eliminada correctamente", "success");
+      if (typeof errorManager !== "undefined") {
+        errorManager.mostrarError("Área eliminada correctamente", "success");
+      }
     }
   },
 
@@ -196,6 +275,10 @@ const editManager = {
     try {
       // Obtener datos actuales de la empresa (sin modificar información básica)
       const datosActuales = DATOS_EMPRESAS[this.companyIdActual];
+      if (!datosActuales) {
+        throw new Error(`Empresa ${this.companyIdActual} no encontrada`);
+      }
+
       const datosActualizados = {
         ...datosActuales,
         areas: this.obtenerDatosTablaActualizados(),
@@ -215,18 +298,22 @@ const editManager = {
       if (exito) {
         this.modoEdicion = false;
         this.actualizarVista();
-        errorManager.mostrarError(
-          "Cambios en la tabla guardados exitosamente",
-          "success"
-        );
+        if (typeof errorManager !== "undefined") {
+          errorManager.mostrarError(
+            "Cambios en la tabla guardados exitosamente",
+            "success"
+          );
+        }
       } else {
-        throw new Error("Error al guardar cambios");
+        throw new Error("Error al guardar cambios en localStorage");
       }
     } catch (error) {
       console.error("Error guardando cambios:", error);
-      errorManager.mostrarError(
-        "Error al guardar los cambios: " + error.message
-      );
+      if (typeof errorManager !== "undefined") {
+        errorManager.mostrarError(
+          "Error al guardar los cambios: " + error.message
+        );
+      }
     }
   },
 
@@ -264,9 +351,12 @@ const editManager = {
       if (
         area.correo &&
         area.correo !== "S.C" &&
+        area.correo !== "" &&
         !this.validarEmail(area.correo)
       ) {
-        errorManager.mostrarError(`El email "${area.correo}" no es válido`);
+        if (typeof errorManager !== "undefined") {
+          errorManager.mostrarError(`El email "${area.correo}" no es válido`);
+        }
         return false;
       }
     }
@@ -286,10 +376,13 @@ const editManager = {
     this.modoEdicion = false;
 
     // Restaurar botones
-    document.getElementById("btn-activar-edicion").style.display =
-      "inline-block";
-    document.getElementById("btn-guardar-cambios").style.display = "none";
-    document.getElementById("btn-cancelar-edicion").style.display = "none";
+    const btnActivar = document.getElementById("btn-activar-edicion");
+    const btnGuardar = document.getElementById("btn-guardar-cambios");
+    const btnCancelar = document.getElementById("btn-cancelar-edicion");
+
+    if (btnActivar) btnActivar.style.display = "inline-block";
+    if (btnGuardar) btnGuardar.style.display = "none";
+    if (btnCancelar) btnCancelar.style.display = "none";
 
     // Recargar la página para restaurar datos originales
     location.reload();
@@ -303,9 +396,31 @@ const editManager = {
     }
 
     // Restaurar botones
-    document.getElementById("btn-activar-edicion").style.display =
-      "inline-block";
-    document.getElementById("btn-guardar-cambios").style.display = "none";
-    document.getElementById("btn-cancelar-edicion").style.display = "none";
+    const btnActivar = document.getElementById("btn-activar-edicion");
+    const btnGuardar = document.getElementById("btn-guardar-cambios");
+    const btnCancelar = document.getElementById("btn-cancelar-edicion");
+
+    if (btnActivar) btnActivar.style.display = "inline-block";
+    if (btnGuardar) btnGuardar.style.display = "none";
+    if (btnCancelar) btnCancelar.style.display = "none";
+
+    // Remover botón de nueva fila si existe
+    const btnNuevaFila = document.getElementById("btn-nueva-fila");
+    if (btnNuevaFila) {
+      btnNuevaFila.remove();
+    }
   },
 };
+
+// Inicialización automática cuando el DOM esté listo
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(() => {
+      editManager.inicializar();
+    }, 100);
+  });
+} else {
+  setTimeout(() => {
+    editManager.inicializar();
+  }, 100);
+}

@@ -21,102 +21,9 @@ body {
     Ubuntu, Cantarell, sans-serif;
   line-height: 1.6;
 }
-/* ========================================
- * ESTILOS ADICIONALES PARA INFO EMPRESA
- * ======================================== */
-.info-basica-container {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
-  margin-bottom: 30px;
-}
-
-.info-basica-container h3 {
-  color: #000;
-  margin-bottom: 15px;
-  border-bottom: 2px solid #000;
-  padding-bottom: 8px;
-}
-
-.info-basica-container p {
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-
-.tabla-scroll-container {
-  max-height: 500px;
-  overflow-y: auto;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  margin-top: 15px;
-}
-
-/* Estilos para mensajes de éxito */
-.error-mensaje.success {
-  background-color: #d4edda !important;
-  color: #155724 !important;
-  border-left: 4px solid #28a745 !important;
-}
-
-/* Animaciones para mensajes */
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideOutRight {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-}
-
-/* Mejoras para la tabla */
-.tabla-areas td {
-  vertical-align: top;
-}
-
-.tabla-areas td a:hover {
-  text-decoration: underline;
-}
-
-/* Responsive para info empresa */
-@media (max-width: 768px) {
-  .info-empresa-container {
-    padding: 10px;
-    margin-top: 60px;
-  }
-
-  .info-container {
-    padding: 15px;
-    margin: 10px auto;
-  }
-
-  .herramientas-busqueda {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .herramientas-busqueda input,
-  .herramientas-busqueda select {
-    min-width: auto;
-    width: 100%;
-  }
-}
 
 /* ========================================
- * ANIMACIONES GLOBALES
+ * ANIMACIONES GLOBALES - ACTUALIZADAS
  * ======================================== */
 @keyframes fadeIn {
   from {
@@ -160,6 +67,64 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* NUEVA ANIMACIÓN PARA MENSAJES */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* ========================================
+ * ESTILOS ADICIONALES PARA INFO EMPRESA
+ * ======================================== */
+.info-basica-container {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  margin-bottom: 30px;
+}
+
+.info-basica-container h3 {
+  color: #000;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 8px;
+}
+
+.info-basica-container p {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.tabla-scroll-container {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+/* Estilos para mensajes de éxito */
+.error-mensaje.success {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+  border-left: 4px solid #28a745 !important;
 }
 
 /* ========================================
@@ -981,206 +946,6 @@ body.info-empresa-page {
 }
 
 /* ========================================
- * ESTILOS RESPONSIVE GLOBALES
- * ======================================== */
-@media (max-width: 768px) {
-  /* Header responsive */
-  .rastros-header {
-    height: 50px;
-    padding: 0 15px;
-  }
-
-  .select-empresa-header {
-    font-size: 13px;
-    padding: 6px 25px 6px 8px;
-  }
-
-  .nombre-empresa-actual {
-    font-size: 13px;
-    margin-left: 10px;
-  }
-
-  /* Login responsive */
-  .contenedor-login {
-    max-width: 100%;
-    margin: 16px;
-    padding: 32px 20px;
-  }
-
-  .logo-contenedor {
-    height: 70px;
-    margin-bottom: 20px;
-  }
-
-  .input-login,
-  .btn-inicio-sesion {
-    height: 44px;
-    font-size: 14px;
-  }
-
-  /* Rastros responsive */
-  .rastros-header.rastros-specific {
-    left: 0;
-    width: 100%;
-    position: relative;
-    margin-bottom: 0;
-  }
-
-  .contenedor-principal {
-    flex-direction: column;
-  }
-
-  .seccion-imagen {
-    min-height: 250px;
-    min-width: 100%;
-    padding: 20px;
-  }
-
-  .seccion-botones {
-    min-width: 100%;
-    padding: 40px 20px;
-  }
-
-  .btn-menu-rastros {
-    width: 100%;
-    max-width: none;
-    height: 80px;
-    font-size: 16px;
-    margin: 15px 0;
-  }
-
-  .etiqueta-cliente {
-    font-size: 20px;
-    padding: 15px 25px;
-  }
-
-  /* Programación responsive */
-  body.programacion-page {
-    padding-top: 50px;
-  }
-
-  .programacion-contenedor {
-    margin: 20px auto;
-    padding: 20px;
-  }
-
-  .form-row {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .btn-guardar {
-    position: static;
-    width: 100%;
-    margin-top: 30px;
-    box-shadow: none;
-  }
-
-  /* Actividades responsive */
-  body.actividades-page {
-    padding-top: 50px;
-  }
-
-  .actividades-contenedor {
-    width: 100%;
-    margin: 20px 0;
-    padding: 15px;
-    border-radius: 0;
-  }
-
-  #tabla-actividades {
-    min-width: 700px;
-  }
-
-  .actividades-contenedor h2 {
-    font-size: 22px;
-  }
-
-  /* Info empresa responsive */
-  .info-empresa-container {
-    padding: 10px;
-  }
-
-  .info-container {
-    padding: 15px;
-    width: 100%;
-  }
-
-  .herramientas-busqueda {
-    flex-direction: column;
-    align-items: stretch;
-    top: 60px;
-  }
-
-  .herramientas-busqueda input,
-  .herramientas-busqueda select {
-    min-width: auto;
-  }
-
-  .tabla-scroll-container {
-    max-height: 400px;
-  }
-
-  .scroll-indicator {
-    display: none;
-  }
-
-  .seccion-tabla h3 {
-    position: static;
-    background: transparent;
-  }
-
-  .boton-volver {
-    position: static;
-  }
-}
-
-@media (max-width: 480px) {
-  .programacion-contenedor {
-    width: 95%;
-    margin: 10px auto;
-    padding: 15px;
-  }
-
-  .programacion-contenedor h2 {
-    font-size: 22px;
-    margin-bottom: 20px;
-  }
-
-  .actividades-contenedor {
-    padding: 10px;
-  }
-
-  #empresa-actual-indicador {
-    font-size: 14px;
-  }
-
-  .info-container {
-    padding: 10px;
-  }
-
-  .info-container h2 {
-    font-size: 20px;
-    padding: 10px;
-    margin: -10px -10px 15px -10px;
-  }
-
-  .herramientas-busqueda {
-    padding: 10px;
-  }
-
-  .btn-menu-rastros {
-    height: 70px;
-    font-size: 14px;
-    margin: 12px 0;
-  }
-
-  .seccion-botones {
-    padding: 30px 15px;
-  }
-}
-
-/* ========================================
  * ESTILOS PARA SISTEMA DE EDICIÓN (SOLO TABLAS)
  * ======================================== */
 
@@ -1283,48 +1048,277 @@ body.info-empresa-page {
   background-color: #f8f9fa;
 }
 
-/* Información básica (no editable) */
-.info-basica-container {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
-  margin-bottom: 30px;
-}
-
-.info-basica-container h3 {
-  color: #000;
-  margin-bottom: 15px;
-  border-bottom: 2px solid #000;
-  padding-bottom: 8px;
-}
-
-.info-basica-container p {
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-
-/* Responsive para edición */
+/* ========================================
+ * ESTILOS RESPONSIVE GLOBALES - MEJORADOS
+ * ======================================== */
 @media (max-width: 768px) {
-  .botones-edicion-container {
+  /* Header responsive */
+  .rastros-header {
+    height: 50px;
+    padding: 0 15px;
+  }
+
+  .empresa-info-selector {
     flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+  }
+
+  .select-empresa-header {
+    font-size: 13px;
+    padding: 6px 25px 6px 8px;
+  }
+
+  .nombre-empresa-actual {
+    font-size: 11px;
     margin-left: 0;
-    margin-top: 10px;
+  }
+
+  /* Login responsive */
+  .contenedor-login {
+    max-width: 100%;
+    margin: 16px;
+    padding: 32px 20px;
+  }
+
+  .logo-contenedor {
+    height: 70px;
+    margin-bottom: 20px;
+  }
+
+  .input-login,
+  .btn-inicio-sesion {
+    height: 44px;
+    font-size: 14px;
+  }
+
+  /* Rastros responsive */
+  .rastros-header.rastros-specific {
+    left: 0;
+    width: 100%;
+    position: relative;
+    margin-bottom: 0;
+  }
+
+  .contenedor-principal {
+    flex-direction: column;
+  }
+
+  .seccion-imagen {
+    min-height: 250px;
+    min-width: 100%;
+    padding: 20px;
+  }
+
+  .seccion-botones {
+    min-width: 100%;
+    padding: 40px 20px;
+  }
+
+  .btn-menu-rastros {
+    width: 100%;
+    max-width: none;
+    height: 80px;
+    font-size: 16px;
+    margin: 15px 0;
+  }
+
+  .etiqueta-cliente {
+    font-size: 20px;
+    padding: 15px 25px;
+  }
+
+  /* Programación responsive */
+  body.programacion-page {
+    padding-top: 50px;
+  }
+
+  .programacion-contenedor {
+    margin: 20px auto;
+    padding: 20px;
+    width: 95%;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .btn-guardar {
+    position: static;
+    width: 100%;
+    margin-top: 30px;
+    box-shadow: none;
+  }
+
+  /* Actividades responsive */
+  body.actividades-page {
+    padding-top: 50px;
+  }
+
+  .actividades-contenedor {
+    width: 100%;
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 0;
+  }
+
+  #tabla-actividades {
+    min-width: 700px;
+    font-size: 12px;
+  }
+
+  .actividades-contenedor h2 {
+    font-size: 22px;
+  }
+
+  /* Info empresa responsive */
+  .info-empresa-container {
+    padding: 10px;
+  }
+
+  .info-container {
+    padding: 15px;
+    width: 100%;
+  }
+
+  .herramientas-busqueda {
+    flex-direction: column;
+    align-items: stretch;
+    top: 60px;
+  }
+
+  .herramientas-busqueda input,
+  .herramientas-busqueda select {
+    min-width: auto;
+  }
+
+  .tabla-scroll-container {
+    max-height: 400px;
+  }
+
+  .scroll-indicator {
+    display: none;
+  }
+
+  .seccion-tabla h3 {
+    position: static;
+    background: transparent;
+  }
+
+  .boton-volver {
+    position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .programacion-contenedor {
+    width: 95%;
+    margin: 10px auto;
+    padding: 15px;
+  }
+
+  .programacion-contenedor h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .input-group label {
+    font-size: 13px;
+  }
+
+  .actividades-contenedor {
+    padding: 10px;
+  }
+
+  #empresa-actual-indicador {
+    font-size: 14px;
+  }
+
+  .info-container {
+    padding: 10px;
+  }
+
+  .info-container h2 {
+    font-size: 20px;
+    padding: 10px;
+    margin: -10px -10px 15px -10px;
+  }
+
+  .herramientas-busqueda {
+    padding: 10px;
+  }
+
+  .btn-menu-rastros {
+    height: 70px;
+    font-size: 14px;
+    margin: 12px 0;
+  }
+
+  .seccion-botones {
+    padding: 30px 15px;
+  }
+
+  /* MEJORAS ESPECÍFICAS PARA TABLAS EN MÓVILES */
+  .tabla-scroll {
+    font-size: 11px;
+  }
+
+  #tabla-actividades {
+    min-width: 600px;
+  }
+
+  #tabla-actividades th,
+  #tabla-actividades td {
+    padding: 6px 4px;
+  }
+
+  .input-tabla {
+    width: 70px;
+    font-size: 11px;
+    padding: 4px;
+  }
+
+  .tabla-areas th,
+  .tabla-areas td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+
+  .input-tabla-editable {
+    font-size: 11px;
+    padding: 4px 6px;
   }
 
   .btn-edicion {
     font-size: 12px;
-    padding: 6px 12px;
+    padding: 6px 10px;
   }
 
-  .acciones-tabla {
-    display: flex;
+  .botones-edicion-container {
     flex-direction: column;
     gap: 5px;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
+
+/* Responsive adicional para tablets pequeñas */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .contenedor-principal {
+    flex-direction: row;
   }
 
-  .seccion-tabla h3 {
-    flex-direction: column;
-    align-items: flex-start;
+  .seccion-imagen {
+    min-width: 35%;
+  }
+
+  .seccion-botones {
+    min-width: 65%;
+  }
+
+  .btn-menu-rastros {
+    width: 90%;
+    height: 85px;
   }
 }
