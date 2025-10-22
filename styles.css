@@ -1179,3 +1179,152 @@ body.info-empresa-page {
     padding: 30px 15px;
   }
 }
+
+/* ========================================
+ * ESTILOS PARA SISTEMA DE EDICIÓN (SOLO TABLAS)
+ * ======================================== */
+
+/* Botones de edición */
+.botones-edicion-container {
+  display: inline-flex;
+  gap: 10px;
+  margin-left: 20px;
+}
+
+.btn-edicion {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-edicion:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#btn-activar-edicion {
+  background-color: #007bff;
+  color: white;
+}
+
+#btn-guardar-cambios {
+  background-color: #28a745;
+  color: white;
+}
+
+#btn-cancelar-edicion {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Tabla editable */
+.input-tabla-editable {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 13px;
+  background-color: white;
+}
+
+.input-tabla-editable:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.acciones-tabla {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.btn-eliminar-fila {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-eliminar-fila:hover {
+  background-color: #c82333;
+  transform: scale(1.1);
+}
+
+/* Botón nueva fila */
+.btn-nueva-fila {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #6f42c1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-nueva-fila:hover {
+  background-color: #5a2d91;
+  transform: translateY(-2px);
+}
+
+/* Estados de edición */
+.modo-edicion .tabla-areas {
+  background-color: #f8f9fa;
+}
+
+/* Información básica (no editable) */
+.info-basica-container {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  margin-bottom: 30px;
+}
+
+.info-basica-container h3 {
+  color: #000;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 8px;
+}
+
+.info-basica-container p {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* Responsive para edición */
+@media (max-width: 768px) {
+  .botones-edicion-container {
+    flex-direction: column;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .btn-edicion {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .acciones-tabla {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .seccion-tabla h3 {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,4 +1,4 @@
-// info_empresa_script.js - Actualizado con nuevas funcionalidades
+// info_empresa_script.js - Actualizado con sistema de edición (solo tablas)
 document.addEventListener("DOMContentLoaded", function () {
   const infoEmpresaDetalle = document.getElementById("info-empresa-detalle");
   const cuerpoTablaContactos = document.getElementById(
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const filtroArea = document.getElementById("filtro-area");
 
   // Función para cargar información de la empresa
-  function cargarInformacionEmpresa() {
+  window.cargarInformacionEmpresa = function () {
     try {
       // Limpiar el contenedor
       infoEmpresaDetalle.innerHTML = "";
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const datos = DATOS_EMPRESAS[selectedCompany];
 
-      // Construir el HTML con los datos de la empresa
+      // Construir el HTML con los datos de la empresa (NO EDITABLES)
       const infoHTML = `
         <div class="info-basica-container">
           <h3>${datos.nombre}</h3>
@@ -58,6 +58,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Inicializar sistema de búsqueda y filtrado
       inicializarBusquedaYFiltros(selectedCompany);
+
+      // Inicializar sistema de edición (solo para tablas)
+      if (typeof editManager !== "undefined") {
+        editManager.inicializar();
+      }
     } catch (error) {
       console.error("Error cargando información de empresa:", error);
       errorManager.mostrarErrorCargaEmpresa(selectedCompany);
@@ -69,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
       `;
     }
-  }
+  };
 
   // Función para cargar los contactos por área
   function cargarContactosAreas(companyId) {
@@ -96,9 +101,13 @@ document.addEventListener("DOMContentLoaded", function () {
           <td><strong>${contacto.area}</strong></td>
           <td>${contacto.productoRequerido}</td>
           <td>${contacto.encargado}</td>
-          <td>${contacto.datosEncargado}</td>
-          <td><a href="mailto:${contacto.correo}" style="color: #2196F3; text-decoration: none;">${contacto.correo}</a></td>
-          <td>${contacto.telefono}</td>
+          <td>${contacto.puesto}</td>
+          <td>${
+            contacto.correo
+              ? `<a href="mailto:${contacto.correo}" style="color: #2196F3; text-decoration: none;">${contacto.correo}</a>`
+              : "S.C"
+          }</td>
+          <td>${contacto.telefono || "S.D"}</td>
         `;
         cuerpoTablaContactos.appendChild(fila);
       });
