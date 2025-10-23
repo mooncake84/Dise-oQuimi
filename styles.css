@@ -193,6 +193,11 @@ body {
   background-size: 10px;
 }
 
+.rastros-header {
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+}
 .nombre-empresa-actual {
   color: #bbb;
   font-size: 14px;
@@ -846,6 +851,8 @@ body.info-empresa-page {
   z-index: 4;
 }
 
+/* ELIMINAR ESTOS ESTILOS REDUNDANTES */
+/*
 .boton-volver {
   margin-top: 30px;
   text-align: center;
@@ -871,6 +878,7 @@ body.info-empresa-page {
 .boton-volver button:hover {
   background-color: #45a049;
 }
+*/
 
 .scroll-indicator {
   position: fixed;

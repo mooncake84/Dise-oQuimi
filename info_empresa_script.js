@@ -1,4 +1,4 @@
-// info_empresa_script.js - Actualizado con sistema de edición (solo tablas) - CORREGIDO
+// info_empresa_script.js - VERSIÓN OPTIMIZADA
 document.addEventListener("DOMContentLoaded", function () {
   const infoEmpresaDetalle = document.getElementById("info-empresa-detalle");
   const cuerpoTablaContactos = document.getElementById(
@@ -10,33 +10,28 @@ document.addEventListener("DOMContentLoaded", function () {
   // Función para cargar información de la empresa
   window.cargarInformacionEmpresa = function () {
     try {
-      console.log("🔍 Iniciando carga de información de empresa...");
+      console.log("🔍 Cargando información de empresa...");
 
       // Limpiar contenedores
       infoEmpresaDetalle.innerHTML = "";
       cuerpoTablaContactos.innerHTML = "";
 
       // Obtener empresa seleccionada
-      let selectedCompany = obtenerParametroUrl("companyId");
-      if (!selectedCompany) {
-        selectedCompany = localStorage.getItem("selectedCompany");
-      }
-      if (!selectedCompany) {
-        selectedCompany = "empresa1";
-      }
+      let selectedCompany =
+        obtenerParametroUrl("companyId") ||
+        localStorage.getItem("selectedCompany") ||
+        "empresa1";
 
       console.log("🏢 Empresa seleccionada:", selectedCompany);
 
-      // CARGAR DATOS EDITADOS PRIMERO
+      // Cargar datos editados
       cargarDatosEditados();
 
-      // Verificar que la empresa existe
       if (!DATOS_EMPRESAS[selectedCompany]) {
         throw new Error(`Empresa ${selectedCompany} no encontrada`);
       }
 
       const datos = DATOS_EMPRESAS[selectedCompany];
-      console.log("📊 Datos cargados:", datos);
 
       // Mostrar información básica
       const infoHTML = `
@@ -56,21 +51,14 @@ document.addEventListener("DOMContentLoaded", function () {
       // Inicializar búsqueda
       inicializarBusquedaYFiltros(selectedCompany);
 
-      // Reinicializar sistema de edición
-      setTimeout(() => {
-        if (typeof editManager !== "undefined") {
-          editManager.modoEdicion = false;
-          const exito = editManager.inicializar();
-          if (!exito) {
-            console.warn("EditManager no se pudo reinicializar");
-          }
-        }
-      }, 1000);
+      console.log("✅ Información de empresa cargada correctamente");
     } catch (error) {
       console.error("❌ Error cargando información:", error);
 
       if (typeof errorManager !== "undefined") {
-        errorManager.mostrarErrorCargaEmpresa(selectedCompany);
+        errorManager.mostrarError(
+          "Error al cargar la información de la empresa"
+        );
       }
 
       infoEmpresaDetalle.innerHTML = `
@@ -82,15 +70,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  // Función para cargar los contactos por área - CORREGIDA
+  // Función para cargar los contactos por área
   function cargarContactosAreas(companyId) {
     try {
-      console.log("📋 Cargando contactos para empresa:", companyId);
-
       cuerpoTablaContactos.innerHTML = "";
 
       const contactos = DATOS_EMPRESAS[companyId]?.areas || [];
-      console.log("👥 Contactos encontrados:", contactos);
 
       if (contactos.length === 0) {
         cuerpoTablaContactos.innerHTML = `
@@ -100,16 +85,14 @@ document.addEventListener("DOMContentLoaded", function () {
             </td>
           </tr>
         `;
-        console.log("ℹ️ No hay contactos para mostrar");
         return;
       }
 
-      // Generar las filas de la tabla - CORREGIDO: Solo 6 columnas
+      // Generar las filas de la tabla
       contactos.forEach((contacto, index) => {
         const fila = document.createElement("tr");
         fila.setAttribute("data-index", index);
 
-        // CORREGIDO: Solo 6 columnas para coincidir con el thead
         fila.innerHTML = `
           <td><strong>${contacto.area || "N/A"}</strong></td>
           <td>${contacto.productoRequerido || "N/A"}</td>
@@ -131,38 +114,23 @@ document.addEventListener("DOMContentLoaded", function () {
       if (typeof errorManager !== "undefined") {
         errorManager.mostrarError("Error al cargar los contactos por área");
       }
-
-      // Mostrar mensaje de error en la tabla
-      cuerpoTablaContactos.innerHTML = `
-        <tr>
-          <td colspan="6" style="text-align: center; color: #d32f2f; padding: 20px;">
-            Error al cargar los contactos: ${error.message}
-          </td>
-        </tr>
-      `;
     }
   }
 
   // Inicializar sistema de búsqueda y filtrado
   function inicializarBusquedaYFiltros(companyId) {
     try {
-      console.log("🔍 Inicializando sistema de búsqueda...");
-
-      // Verificar que searchManager existe
       if (typeof searchManager === "undefined") {
         console.warn("SearchManager no está disponible");
         return;
       }
 
-      // Generar opciones de filtro dinámicamente
+      // Generar opciones de filtro
       const productos = searchManager.generarOpcionesFiltro(
         companyId,
         "producto"
       );
       const areas = searchManager.generarOpcionesFiltro(companyId, "area");
-
-      console.log("📦 Productos para filtro:", productos);
-      console.log("🏭 Áreas para filtro:", areas);
 
       // Llenar filtro de productos
       if (filtroProducto) {
@@ -174,7 +142,6 @@ document.addEventListener("DOMContentLoaded", function () {
           option.textContent = producto;
           filtroProducto.appendChild(option);
         });
-        console.log("✅ Filtro de productos inicializado");
       }
 
       // Llenar filtro de áreas
@@ -186,21 +153,13 @@ document.addEventListener("DOMContentLoaded", function () {
           option.textContent = area;
           filtroArea.appendChild(option);
         });
-        console.log("✅ Filtro de áreas inicializado");
       }
 
-      // Inicializar buscador
+      // Inicializar buscador y filtros
       searchManager.inicializarBuscador(
         "buscador-contactos",
-        "tabla-contactos-areas",
-        function (filasVisibles) {
-          console.log(
-            `👀 Filas visibles después de búsqueda: ${filasVisibles}`
-          );
-        }
+        "tabla-contactos-areas"
       );
-
-      // Inicializar filtros
       searchManager.inicializarFiltroProducto(
         "filtro-producto",
         "tabla-contactos-areas"
@@ -210,52 +169,19 @@ document.addEventListener("DOMContentLoaded", function () {
         "tabla-contactos-areas"
       );
 
-      console.log(
-        "✅ Sistema de búsqueda y filtrado inicializado correctamente"
-      );
+      console.log("✅ Sistema de búsqueda inicializado correctamente");
     } catch (error) {
       console.error("❌ Error inicializando búsqueda:", error);
-      if (typeof errorManager !== "undefined") {
-        errorManager.mostrarError("Error al inicializar sistema de búsqueda");
-      }
     }
   }
 
-  /**
-   * Obtiene un parámetro de la URL.
-   * @param {string} name - Nombre del parámetro.
-   */
+  // Obtener parámetro de la URL
   function obtenerParametroUrl(name) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(name);
   }
 
-  // Función de debug para verificar datos
-  function verificarDatosEmpresa(companyId) {
-    console.log("🔍 VERIFICANDO DATOS:");
-    console.log("Company ID:", companyId);
-    console.log("DATOS_EMPRESAS:", DATOS_EMPRESAS);
-    console.log("Empresa específica:", DATOS_EMPRESAS[companyId]);
-    console.log("Áreas:", DATOS_EMPRESAS[companyId]?.areas);
-
-    // Verificar localStorage
-    const datosGuardados = localStorage.getItem("datosEmpresasEditados");
-    console.log(
-      "LocalStorage:",
-      datosGuardados ? JSON.parse(datosGuardados) : "No hay datos"
-    );
-  }
-
   // Cargar la información al iniciar la página
-  console.log("🚀 Iniciando carga de información de empresa...");
+  console.log("🚀 Iniciando aplicación...");
   cargarInformacionEmpresa();
-
-  // Debug
-  setTimeout(() => {
-    let companyId =
-      obtenerParametroUrl("companyId") ||
-      localStorage.getItem("selectedCompany") ||
-      "empresa1";
-    verificarDatosEmpresa(companyId);
-  }, 2000);
 });

@@ -1,4 +1,4 @@
-// editManager.js - Gestión de edición de datos de empresa (solo tablas) - CORREGIDO
+// editManager.js - VERSIÓN MEJORADA CON RECARGA CONFIABLE
 const editManager = {
   modoEdicion: false,
   companyIdActual: null,
@@ -9,11 +9,9 @@ const editManager = {
       // Verificar dependencias
       if (typeof errorManager === "undefined") {
         console.error("errorManager no está disponible");
-        // Proveer un fallback básico
         window.errorManager = {
           mostrarError: (msg, tipo) => {
-            const method = tipo === "error" ? "error" : "log";
-            console[method](msg);
+            console[tipo === "error" ? "error" : "log"](msg);
             alert(msg);
           },
         };
@@ -43,29 +41,24 @@ const editManager = {
       return;
     }
 
-    // Verificar si ya existen botones
     if (document.getElementById("btn-activar-edicion")) {
       return;
     }
 
-    // Crear contenedor de botones
     const botonesContainer = document.createElement("div");
     botonesContainer.className = "botones-edicion-container";
 
-    // Botón Activar Edición
     const btnActivarEdicion = document.createElement("button");
     btnActivarEdicion.id = "btn-activar-edicion";
     btnActivarEdicion.innerHTML = "✏️ Editar Tabla";
     btnActivarEdicion.className = "btn-edicion";
 
-    // Botón Guardar Cambios (inicialmente oculto)
     const btnGuardarCambios = document.createElement("button");
     btnGuardarCambios.id = "btn-guardar-cambios";
     btnGuardarCambios.innerHTML = "💾 Guardar Cambios";
     btnGuardarCambios.className = "btn-edicion btn-guardar";
     btnGuardarCambios.style.display = "none";
 
-    // Botón Cancelar Edición (inicialmente oculto)
     const btnCancelarEdicion = document.createElement("button");
     btnCancelarEdicion.id = "btn-cancelar-edicion";
     btnCancelarEdicion.innerHTML = "❌ Cancelar";
@@ -95,12 +88,7 @@ const editManager = {
         this.cancelarEdicion();
       } else if (e.target.classList.contains("btn-eliminar-fila")) {
         this.eliminarFila(e.target);
-      }
-    });
-
-    // Event listener para el botón de nueva fila
-    document.addEventListener("click", (e) => {
-      if (e.target.id === "btn-nueva-fila") {
+      } else if (e.target.id === "btn-nueva-fila") {
         this.agregarNuevaFila();
       }
     });
@@ -116,14 +104,12 @@ const editManager = {
         throw new Error("No se pudo determinar la empresa actual");
       }
 
-      // Mostrar/ocultar botones
       document.getElementById("btn-activar-edicion").style.display = "none";
       document.getElementById("btn-guardar-cambios").style.display =
         "inline-block";
       document.getElementById("btn-cancelar-edicion").style.display =
         "inline-block";
 
-      // Agregar controles a la tabla
       this.agregarControlesTabla();
 
       if (typeof errorManager !== "undefined") {
@@ -154,7 +140,6 @@ const editManager = {
         companyId = localStorage.getItem("selectedCompany") || "empresa1";
       }
 
-      // Validar que la empresa existe
       if (!DATOS_EMPRESAS[companyId]) {
         throw new Error(`Empresa ${companyId} no encontrada`);
       }
@@ -180,7 +165,6 @@ const editManager = {
     const thead = tabla.querySelector("thead tr");
     const thAccionesExistente = thead.querySelector("th:last-child");
 
-    // Verificar si la última columna ya es "Acciones"
     if (
       !thAccionesExistente ||
       !thAccionesExistente.textContent.includes("Acciones")
@@ -198,7 +182,6 @@ const editManager = {
     console.log(`📝 Procesando ${filas.length} filas...`);
 
     filas.forEach((fila, index) => {
-      // Verificar si ya tiene columna de acciones
       let tdAcciones = fila.querySelector(".acciones-tabla");
 
       if (!tdAcciones) {
@@ -209,7 +192,6 @@ const editManager = {
         console.log(`✅ Columna acciones agregada a fila ${index}`);
       }
 
-      // Hacer celdas editables si no lo están ya
       if (!fila.querySelector(".input-tabla-editable")) {
         this.hacerFilaEditable(fila);
         console.log(`✅ Fila ${index} hecha editable`);
@@ -290,29 +272,25 @@ const editManager = {
     }
   },
 
-  // Guardar todos los cambios - FUNCIÓN MEJORADA
+  // Guardar todos los cambios - RECARGA CONFIABLE
   guardarCambios: function () {
     try {
-      console.log("💾 Guardando cambios...");
+      console.log("💾 Iniciando proceso de guardado...");
 
-      // Obtener companyId actual
       this.companyIdActual = this.obtenerCompanyIdActual();
       if (!this.companyIdActual) {
         throw new Error("No se pudo determinar la empresa actual");
       }
 
-      // Obtener datos actuales
       const datosActuales = DATOS_EMPRESAS[this.companyIdActual];
       if (!datosActuales) {
         throw new Error(`Empresa ${this.companyIdActual} no encontrada`);
       }
 
-      // Obtener datos actualizados de la tabla
       const areasActualizadas = this.obtenerDatosTablaActualizados();
 
       console.log("📊 Áreas a guardar:", areasActualizadas);
 
-      // Validar que hay al menos un área
       if (areasActualizadas.length === 0) {
         if (typeof errorManager !== "undefined") {
           errorManager.mostrarError(
@@ -323,21 +301,19 @@ const editManager = {
         return;
       }
 
-      // Crear objeto actualizado
       const datosActualizados = {
         ...datosActuales,
         areas: areasActualizadas,
       };
 
-      // Validar datos
       if (!this.validarDatos(datosActualizados)) {
         return;
       }
 
-      // ACTUALIZAR DIRECTAMENTE EL OBJETO GLOBAL
+      // ACTUALIZACIÓN SÓLIDA DEL OBJETO GLOBAL
       DATOS_EMPRESAS[this.companyIdActual] = datosActualizados;
 
-      // Guardar en localStorage
+      // GUARDADO CONFIRMADO
       const exito = guardarCambiosEmpresa(
         this.companyIdActual,
         datosActualizados
@@ -346,33 +322,55 @@ const editManager = {
       if (exito) {
         this.modoEdicion = false;
 
-        // FORZAR RECARGA COMPLETA
+        // RECARGA AUTOMÁTICA CONFIRMADA
+        console.log("🔄 Recargando datos automáticamente...");
+
+        // Método 1: Recarga suave mediante función
         if (typeof cargarInformacionEmpresa === "function") {
-          setTimeout(() => {
-            cargarInformacionEmpresa();
-          }, 500);
+          cargarInformacionEmpresa();
+          this.mostrarBotonesNormales();
+
+          if (typeof errorManager !== "undefined") {
+            errorManager.mostrarError(
+              "✅ Cambios guardados exitosamente. Los datos se han actualizado.",
+              "success",
+              3000
+            );
+          }
         } else {
-          // Fallback: recargar página
+          // Método 2: Recarga de página como fallback
+          console.log("⚠️ Usando recarga de página como fallback");
           location.reload();
         }
 
-        if (typeof errorManager !== "undefined") {
-          errorManager.mostrarError(
-            "Cambios guardados exitosamente. Recargando datos...",
-            "success",
-            3000
-          );
-        }
-
-        console.log("✅ Cambios guardados y datos recargados");
+        console.log("✅ Proceso de guardado completado exitosamente");
       } else {
-        throw new Error("Error al guardar cambios en localStorage");
+        throw new Error("Error al guardar cambios en el almacenamiento");
       }
     } catch (error) {
-      console.error("❌ Error guardando cambios:", error);
+      console.error("❌ Error en el proceso de guardado:", error);
       if (typeof errorManager !== "undefined") {
-        errorManager.mostrarError("Error al guardar: " + error.message);
+        errorManager.mostrarError(
+          "Error al guardar los cambios: " + error.message
+        );
       }
+    }
+  },
+
+  // Mostrar botones en estado normal
+  mostrarBotonesNormales: function () {
+    const btnActivar = document.getElementById("btn-activar-edicion");
+    const btnGuardar = document.getElementById("btn-guardar-cambios");
+    const btnCancelar = document.getElementById("btn-cancelar-edicion");
+
+    if (btnActivar) btnActivar.style.display = "inline-block";
+    if (btnGuardar) btnGuardar.style.display = "none";
+    if (btnCancelar) btnCancelar.style.display = "none";
+
+    // Remover botón de nueva fila
+    const btnNuevaFila = document.getElementById("btn-nueva-fila");
+    if (btnNuevaFila) {
+      btnNuevaFila.remove();
     }
   },
 
@@ -381,11 +379,8 @@ const editManager = {
     const filas = document.querySelectorAll("#cuerpo-tabla-contactos tr");
     const areas = [];
 
-    console.log(`📋 Procesando ${filas.length} filas para guardar...`);
-
     filas.forEach((fila, index) => {
       const inputs = fila.querySelectorAll(".input-tabla-editable");
-      console.log(`Fila ${index}: ${inputs.length} inputs encontrados`);
 
       if (inputs.length >= 6) {
         const area = {
@@ -397,29 +392,17 @@ const editManager = {
           telefono: inputs[5].value.trim(),
         };
 
-        // Solo agregar si tiene al menos área
         if (area.area) {
           areas.push(area);
-          console.log(`✅ Área agregada: ${area.area}`);
-        } else {
-          console.log(`⚠️ Fila ${index} ignorada: sin nombre de área`);
         }
-      } else {
-        console.warn(
-          `❌ Fila ${index} ignorada: solo ${inputs.length} inputs (se esperaban 6)`
-        );
       }
     });
 
-    console.log(`📦 Total de áreas a guardar: ${areas.length}`);
     return areas;
   },
 
   // Validar datos antes de guardar
   validarDatos: function (datos) {
-    console.log("🔍 Validando datos antes de guardar...");
-
-    // Validar emails en áreas
     for (let area of datos.areas) {
       if (
         area.correo &&
@@ -433,8 +416,6 @@ const editManager = {
         return false;
       }
     }
-
-    console.log("✅ Validación de datos exitosa");
     return true;
   },
 
@@ -450,32 +431,17 @@ const editManager = {
     console.log("❌ Cancelando edición...");
 
     this.modoEdicion = false;
-
-    // Restaurar botones
-    const btnActivar = document.getElementById("btn-activar-edicion");
-    const btnGuardar = document.getElementById("btn-guardar-cambios");
-    const btnCancelar = document.getElementById("btn-cancelar-edicion");
-
-    if (btnActivar) btnActivar.style.display = "inline-block";
-    if (btnGuardar) btnGuardar.style.display = "none";
-    if (btnCancelar) btnCancelar.style.display = "none";
+    this.mostrarBotonesNormales();
 
     // Recargar la página para restaurar datos originales
     location.reload();
   },
 };
 
-// Inicialización automática cuando el DOM esté listo
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", function () {
-    setTimeout(() => {
-      console.log("🚀 Inicializando editManager...");
-      editManager.inicializar();
-    }, 100);
-  });
-} else {
+// Inicialización automática
+document.addEventListener("DOMContentLoaded", function () {
   setTimeout(() => {
     console.log("🚀 Inicializando editManager...");
     editManager.inicializar();
   }, 100);
-}
+});
