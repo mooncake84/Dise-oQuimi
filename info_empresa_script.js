@@ -1,4 +1,4 @@
-// info_empresa_script.js - Actualizado con sistema de edición (solo tablas) - MEJORADO
+// info_empresa_script.js - Actualizado con sistema de edición (solo tablas) - CORREGIDO
 document.addEventListener("DOMContentLoaded", function () {
   const infoEmpresaDetalle = document.getElementById("info-empresa-detalle");
   const cuerpoTablaContactos = document.getElementById(
@@ -10,42 +10,35 @@ document.addEventListener("DOMContentLoaded", function () {
   // Función para cargar información de la empresa
   window.cargarInformacionEmpresa = function () {
     try {
-      // Limpiar el contenedor
+      console.log("🔍 Iniciando carga de información de empresa...");
+
+      // Limpiar contenedores
       infoEmpresaDetalle.innerHTML = "";
+      cuerpoTablaContactos.innerHTML = "";
 
-      // Intentar obtener el companyId de la URL primero
+      // Obtener empresa seleccionada
       let selectedCompany = obtenerParametroUrl("companyId");
-
-      // Si no hay parámetro en la URL, intentar obtener del localStorage
       if (!selectedCompany) {
         selectedCompany = localStorage.getItem("selectedCompany");
       }
-
-      // Si aún no hay empresa seleccionada, usar empresa1 por defecto
       if (!selectedCompany) {
         selectedCompany = "empresa1";
       }
 
-      console.log("Empresa seleccionada:", selectedCompany);
+      console.log("🏢 Empresa seleccionada:", selectedCompany);
 
-      // Validar que DATOS_EMPRESAS existe
-      if (typeof DATOS_EMPRESAS === "undefined") {
-        throw new Error("Datos de empresas no cargados");
-      }
+      // CARGAR DATOS EDITADOS PRIMERO
+      cargarDatosEditados();
 
-      // Validar datos de la empresa
-      if (typeof errorManager !== "undefined") {
-        errorManager.validarDatosEmpresa(selectedCompany);
-      } else {
-        // Validación básica si errorManager no está disponible
-        if (!DATOS_EMPRESAS[selectedCompany]) {
-          throw new Error(`Empresa ${selectedCompany} no encontrada`);
-        }
+      // Verificar que la empresa existe
+      if (!DATOS_EMPRESAS[selectedCompany]) {
+        throw new Error(`Empresa ${selectedCompany} no encontrada`);
       }
 
       const datos = DATOS_EMPRESAS[selectedCompany];
+      console.log("📊 Datos cargados:", datos);
 
-      // Construir el HTML con los datos de la empresa (NO EDITABLES)
+      // Mostrar información básica
       const infoHTML = `
         <div class="info-basica-container">
           <h3>${datos.nombre}</h3>
@@ -53,34 +46,28 @@ document.addEventListener("DOMContentLoaded", function () {
           <p><strong>Dirección:</strong> ${datos.direccion}</p>
           <p><strong>Contacto Email:</strong> ${datos.contacto}</p>
           <p><strong>Teléfono:</strong> ${datos.telefono}</p>
-          <p style="margin-top: 20px; font-style: italic; color: #666;">
-            *Esta información es provisional y debe ser reemplazada.
-          </p>
         </div>
       `;
       infoEmpresaDetalle.innerHTML = infoHTML;
 
-      // Cargar los datos de contacto por área
+      // Cargar contactos
       cargarContactosAreas(selectedCompany);
 
-      // Inicializar sistema de búsqueda y filtrado
+      // Inicializar búsqueda
       inicializarBusquedaYFiltros(selectedCompany);
 
-      // Inicializar sistema de edición (solo para tablas)
+      // Reinicializar sistema de edición
       setTimeout(() => {
         if (typeof editManager !== "undefined") {
+          editManager.modoEdicion = false;
           const exito = editManager.inicializar();
           if (!exito) {
-            console.warn(
-              "El sistema de edición no se pudo inicializar correctamente"
-            );
+            console.warn("EditManager no se pudo reinicializar");
           }
-        } else {
-          console.warn("editManager no está disponible");
         }
-      }, 500);
+      }, 1000);
     } catch (error) {
-      console.error("Error cargando información de empresa:", error);
+      console.error("❌ Error cargando información:", error);
 
       if (typeof errorManager !== "undefined") {
         errorManager.mostrarErrorCargaEmpresa(selectedCompany);
@@ -88,19 +75,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
       infoEmpresaDetalle.innerHTML = `
         <div class="error-mensaje">
-          Error: No se pudo cargar la información de la empresa.<br>
+          Error: No se pudo cargar la información.<br>
           Detalle: ${error.message}
         </div>
       `;
     }
   };
 
-  // Función para cargar los contactos por área
+  // Función para cargar los contactos por área - CORREGIDA
   function cargarContactosAreas(companyId) {
     try {
+      console.log("📋 Cargando contactos para empresa:", companyId);
+
       cuerpoTablaContactos.innerHTML = "";
 
       const contactos = DATOS_EMPRESAS[companyId]?.areas || [];
+      console.log("👥 Contactos encontrados:", contactos);
 
       if (contactos.length === 0) {
         cuerpoTablaContactos.innerHTML = `
@@ -110,19 +100,23 @@ document.addEventListener("DOMContentLoaded", function () {
             </td>
           </tr>
         `;
+        console.log("ℹ️ No hay contactos para mostrar");
         return;
       }
 
-      // Generar las filas de la tabla
-      contactos.forEach((contacto) => {
+      // Generar las filas de la tabla - CORREGIDO: Solo 6 columnas
+      contactos.forEach((contacto, index) => {
         const fila = document.createElement("tr");
+        fila.setAttribute("data-index", index);
+
+        // CORREGIDO: Solo 6 columnas para coincidir con el thead
         fila.innerHTML = `
-          <td><strong>${contacto.area}</strong></td>
-          <td>${contacto.productoRequerido}</td>
-          <td>${contacto.encargado}</td>
-          <td>${contacto.puesto}</td>
+          <td><strong>${contacto.area || "N/A"}</strong></td>
+          <td>${contacto.productoRequerido || "N/A"}</td>
+          <td>${contacto.encargado || "N/A"}</td>
+          <td>${contacto.puesto || "N/A"}</td>
           <td>${
-            contacto.correo
+            contacto.correo && contacto.correo !== "S.C"
               ? `<a href="mailto:${contacto.correo}" style="color: #2196F3; text-decoration: none;">${contacto.correo}</a>`
               : "S.C"
           }</td>
@@ -130,17 +124,30 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
         cuerpoTablaContactos.appendChild(fila);
       });
+
+      console.log("✅ Tabla de contactos cargada correctamente");
     } catch (error) {
-      console.error("Error cargando contactos:", error);
+      console.error("❌ Error cargando contactos:", error);
       if (typeof errorManager !== "undefined") {
         errorManager.mostrarError("Error al cargar los contactos por área");
       }
+
+      // Mostrar mensaje de error en la tabla
+      cuerpoTablaContactos.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; color: #d32f2f; padding: 20px;">
+            Error al cargar los contactos: ${error.message}
+          </td>
+        </tr>
+      `;
     }
   }
 
   // Inicializar sistema de búsqueda y filtrado
   function inicializarBusquedaYFiltros(companyId) {
     try {
+      console.log("🔍 Inicializando sistema de búsqueda...");
+
       // Verificar que searchManager existe
       if (typeof searchManager === "undefined") {
         console.warn("SearchManager no está disponible");
@@ -154,6 +161,9 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       const areas = searchManager.generarOpcionesFiltro(companyId, "area");
 
+      console.log("📦 Productos para filtro:", productos);
+      console.log("🏭 Áreas para filtro:", areas);
+
       // Llenar filtro de productos
       if (filtroProducto) {
         filtroProducto.innerHTML =
@@ -164,6 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
           option.textContent = producto;
           filtroProducto.appendChild(option);
         });
+        console.log("✅ Filtro de productos inicializado");
       }
 
       // Llenar filtro de áreas
@@ -175,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
           option.textContent = area;
           filtroArea.appendChild(option);
         });
+        console.log("✅ Filtro de áreas inicializado");
       }
 
       // Inicializar buscador
@@ -182,7 +194,9 @@ document.addEventListener("DOMContentLoaded", function () {
         "buscador-contactos",
         "tabla-contactos-areas",
         function (filasVisibles) {
-          console.log(`Filas visibles después de búsqueda: ${filasVisibles}`);
+          console.log(
+            `👀 Filas visibles después de búsqueda: ${filasVisibles}`
+          );
         }
       );
 
@@ -195,8 +209,12 @@ document.addEventListener("DOMContentLoaded", function () {
         "filtro-area",
         "tabla-contactos-areas"
       );
+
+      console.log(
+        "✅ Sistema de búsqueda y filtrado inicializado correctamente"
+      );
     } catch (error) {
-      console.error("Error inicializando búsqueda:", error);
+      console.error("❌ Error inicializando búsqueda:", error);
       if (typeof errorManager !== "undefined") {
         errorManager.mostrarError("Error al inicializar sistema de búsqueda");
       }
@@ -212,6 +230,32 @@ document.addEventListener("DOMContentLoaded", function () {
     return urlParams.get(name);
   }
 
+  // Función de debug para verificar datos
+  function verificarDatosEmpresa(companyId) {
+    console.log("🔍 VERIFICANDO DATOS:");
+    console.log("Company ID:", companyId);
+    console.log("DATOS_EMPRESAS:", DATOS_EMPRESAS);
+    console.log("Empresa específica:", DATOS_EMPRESAS[companyId]);
+    console.log("Áreas:", DATOS_EMPRESAS[companyId]?.areas);
+
+    // Verificar localStorage
+    const datosGuardados = localStorage.getItem("datosEmpresasEditados");
+    console.log(
+      "LocalStorage:",
+      datosGuardados ? JSON.parse(datosGuardados) : "No hay datos"
+    );
+  }
+
   // Cargar la información al iniciar la página
+  console.log("🚀 Iniciando carga de información de empresa...");
   cargarInformacionEmpresa();
+
+  // Debug
+  setTimeout(() => {
+    let companyId =
+      obtenerParametroUrl("companyId") ||
+      localStorage.getItem("selectedCompany") ||
+      "empresa1";
+    verificarDatosEmpresa(companyId);
+  }, 2000);
 });

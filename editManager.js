@@ -5,27 +5,32 @@ const editManager = {
 
   // Inicializar sistema de edición
   inicializar: function () {
-    // Verificar dependencias
-    if (typeof errorManager === "undefined") {
-      console.error("errorManager no está disponible");
-      // Proveer un fallback básico
-      window.errorManager = {
-        mostrarError: (msg, tipo) => {
-          const method = tipo === "error" ? "error" : "log";
-          console[method](msg);
-          alert(msg); // Fallback simple
-        },
-      };
-    }
+    try {
+      // Verificar dependencias
+      if (typeof errorManager === "undefined") {
+        console.error("errorManager no está disponible");
+        // Proveer un fallback básico
+        window.errorManager = {
+          mostrarError: (msg, tipo) => {
+            const method = tipo === "error" ? "error" : "log";
+            console[method](msg);
+            alert(msg);
+          },
+        };
+      }
 
-    if (typeof guardarCambiosEmpresa === "undefined") {
-      console.error("guardarCambiosEmpresa no está disponible");
+      if (typeof guardarCambiosEmpresa === "undefined") {
+        console.error("guardarCambiosEmpresa no está disponible");
+        return false;
+      }
+
+      this.crearBotonesEdicion();
+      this.agregarEventListeners();
+      return true;
+    } catch (error) {
+      console.error("Error inicializando editManager:", error);
       return false;
     }
-
-    this.crearBotonesEdicion();
-    this.agregarEventListeners();
-    return true;
   },
 
   // Crear botones de edición
@@ -46,11 +51,6 @@ const editManager = {
     // Crear contenedor de botones
     const botonesContainer = document.createElement("div");
     botonesContainer.className = "botones-edicion-container";
-    botonesContainer.style.cssText = `
-      display: inline-flex;
-      gap: 10px;
-      margin-left: 20px;
-    `;
 
     // Botón Activar Edición
     const btnActivarEdicion = document.createElement("button");
@@ -80,6 +80,8 @@ const editManager = {
     seccionTabla.style.alignItems = "center";
     seccionTabla.style.flexWrap = "wrap";
     seccionTabla.appendChild(botonesContainer);
+
+    console.log("✅ Botones de edición creados correctamente");
   },
 
   // Agregar event listeners
@@ -96,7 +98,7 @@ const editManager = {
       }
     });
 
-    // Event listener para el botón de nueva fila (se agrega dinámicamente)
+    // Event listener para el botón de nueva fila
     document.addEventListener("click", (e) => {
       if (e.target.id === "btn-nueva-fila") {
         this.agregarNuevaFila();
@@ -130,8 +132,10 @@ const editManager = {
           "info"
         );
       }
+
+      console.log("✅ Modo edición activado correctamente");
     } catch (error) {
-      console.error("Error activando modo edición:", error);
+      console.error("❌ Error activando modo edición:", error);
       if (typeof errorManager !== "undefined") {
         errorManager.mostrarError(
           "Error al activar modo edición: " + error.message
@@ -157,8 +161,8 @@ const editManager = {
 
       return companyId;
     } catch (error) {
-      console.error("Error obteniendo companyId:", error);
-      return "empresa1"; // Fallback
+      console.error("❌ Error obteniendo companyId:", error);
+      return "empresa1";
     }
   },
 
@@ -166,52 +170,66 @@ const editManager = {
   agregarControlesTabla: function () {
     const tabla = document.getElementById("tabla-contactos-areas");
     if (!tabla) {
-      console.error("No se encontró la tabla de contactos");
+      console.error("❌ No se encontró la tabla de contactos");
       return;
     }
 
+    console.log("🔧 Agregando controles a la tabla...");
+
     // Agregar columna de acciones al thead si no existe
     const thead = tabla.querySelector("thead tr");
+    const thAccionesExistente = thead.querySelector("th:last-child");
+
+    // Verificar si la última columna ya es "Acciones"
     if (
-      !thead.querySelector("th:last-child").textContent.includes("Acciones")
+      !thAccionesExistente ||
+      !thAccionesExistente.textContent.includes("Acciones")
     ) {
       const thAcciones = document.createElement("th");
       thAcciones.textContent = "Acciones";
       thAcciones.style.width = "120px";
       thAcciones.style.minWidth = "100px";
       thead.appendChild(thAcciones);
+      console.log("✅ Columna 'Acciones' agregada al thead");
     }
 
     // Agregar controles a cada fila
     const filas = tabla.querySelectorAll("tbody tr");
+    console.log(`📝 Procesando ${filas.length} filas...`);
+
     filas.forEach((fila, index) => {
       // Verificar si ya tiene columna de acciones
-      if (!fila.querySelector(".acciones-tabla")) {
-        const tdAcciones = document.createElement("td");
+      let tdAcciones = fila.querySelector(".acciones-tabla");
+
+      if (!tdAcciones) {
+        tdAcciones = document.createElement("td");
         tdAcciones.className = "acciones-tabla";
-
-        tdAcciones.innerHTML = `
-          <button class="btn-eliminar-fila" data-index="${index}" title="Eliminar área">🗑️</button>
-        `;
-
+        tdAcciones.innerHTML = `<button class="btn-eliminar-fila" data-index="${index}" title="Eliminar área">🗑️</button>`;
         fila.appendChild(tdAcciones);
+        console.log(`✅ Columna acciones agregada a fila ${index}`);
       }
 
       // Hacer celdas editables si no lo están ya
       if (!fila.querySelector(".input-tabla-editable")) {
         this.hacerFilaEditable(fila);
+        console.log(`✅ Fila ${index} hecha editable`);
       }
     });
 
     // Agregar botón para nueva fila si no existe
     if (!document.getElementById("btn-nueva-fila")) {
       this.agregarBotonNuevaFila();
+      console.log("✅ Botón 'Nueva Fila' agregado");
     }
+
+    console.log("✅ Controles de tabla agregados correctamente");
   },
 
   // Hacer fila editable
   hacerFilaEditable: function (fila) {
     const celdas = fila.querySelectorAll("td:not(:last-child)");
+    console.log(`🔧 Haciendo editables ${celdas.length} celdas`);
+
     celdas.forEach((celda, index) => {
       const textoOriginal = celda.textContent.trim();
       const esEmail = index === 4 && textoOriginal.includes("@");
@@ -257,6 +275,7 @@ const editManager = {
     `;
 
     tbody.appendChild(nuevaFila);
+    console.log("✅ Nueva fila agregada correctamente");
   },
 
   // Eliminar fila
@@ -267,21 +286,47 @@ const editManager = {
       if (typeof errorManager !== "undefined") {
         errorManager.mostrarError("Área eliminada correctamente", "success");
       }
+      console.log("✅ Fila eliminada correctamente");
     }
   },
 
-  // Guardar todos los cambios
+  // Guardar todos los cambios - FUNCIÓN MEJORADA
   guardarCambios: function () {
     try {
-      // Obtener datos actuales de la empresa (sin modificar información básica)
+      console.log("💾 Guardando cambios...");
+
+      // Obtener companyId actual
+      this.companyIdActual = this.obtenerCompanyIdActual();
+      if (!this.companyIdActual) {
+        throw new Error("No se pudo determinar la empresa actual");
+      }
+
+      // Obtener datos actuales
       const datosActuales = DATOS_EMPRESAS[this.companyIdActual];
       if (!datosActuales) {
         throw new Error(`Empresa ${this.companyIdActual} no encontrada`);
       }
 
+      // Obtener datos actualizados de la tabla
+      const areasActualizadas = this.obtenerDatosTablaActualizados();
+
+      console.log("📊 Áreas a guardar:", areasActualizadas);
+
+      // Validar que hay al menos un área
+      if (areasActualizadas.length === 0) {
+        if (typeof errorManager !== "undefined") {
+          errorManager.mostrarError(
+            "Debe haber al menos un área en la tabla",
+            "warning"
+          );
+        }
+        return;
+      }
+
+      // Crear objeto actualizado
       const datosActualizados = {
         ...datosActuales,
-        areas: this.obtenerDatosTablaActualizados(),
+        areas: areasActualizadas,
       };
 
       // Validar datos
@@ -289,7 +334,10 @@ const editManager = {
         return;
       }
 
-      // Guardar cambios
+      // ACTUALIZAR DIRECTAMENTE EL OBJETO GLOBAL
+      DATOS_EMPRESAS[this.companyIdActual] = datosActualizados;
+
+      // Guardar en localStorage
       const exito = guardarCambiosEmpresa(
         this.companyIdActual,
         datosActualizados
@@ -297,22 +345,33 @@ const editManager = {
 
       if (exito) {
         this.modoEdicion = false;
-        this.actualizarVista();
+
+        // FORZAR RECARGA COMPLETA
+        if (typeof cargarInformacionEmpresa === "function") {
+          setTimeout(() => {
+            cargarInformacionEmpresa();
+          }, 500);
+        } else {
+          // Fallback: recargar página
+          location.reload();
+        }
+
         if (typeof errorManager !== "undefined") {
           errorManager.mostrarError(
-            "Cambios en la tabla guardados exitosamente",
-            "success"
+            "Cambios guardados exitosamente. Recargando datos...",
+            "success",
+            3000
           );
         }
+
+        console.log("✅ Cambios guardados y datos recargados");
       } else {
         throw new Error("Error al guardar cambios en localStorage");
       }
     } catch (error) {
-      console.error("Error guardando cambios:", error);
+      console.error("❌ Error guardando cambios:", error);
       if (typeof errorManager !== "undefined") {
-        errorManager.mostrarError(
-          "Error al guardar los cambios: " + error.message
-        );
+        errorManager.mostrarError("Error al guardar: " + error.message);
       }
     }
   },
@@ -322,8 +381,12 @@ const editManager = {
     const filas = document.querySelectorAll("#cuerpo-tabla-contactos tr");
     const areas = [];
 
-    filas.forEach((fila) => {
+    console.log(`📋 Procesando ${filas.length} filas para guardar...`);
+
+    filas.forEach((fila, index) => {
       const inputs = fila.querySelectorAll(".input-tabla-editable");
+      console.log(`Fila ${index}: ${inputs.length} inputs encontrados`);
+
       if (inputs.length >= 6) {
         const area = {
           area: inputs[0].value.trim(),
@@ -337,15 +400,25 @@ const editManager = {
         // Solo agregar si tiene al menos área
         if (area.area) {
           areas.push(area);
+          console.log(`✅ Área agregada: ${area.area}`);
+        } else {
+          console.log(`⚠️ Fila ${index} ignorada: sin nombre de área`);
         }
+      } else {
+        console.warn(
+          `❌ Fila ${index} ignorada: solo ${inputs.length} inputs (se esperaban 6)`
+        );
       }
     });
 
+    console.log(`📦 Total de áreas a guardar: ${areas.length}`);
     return areas;
   },
 
   // Validar datos antes de guardar
   validarDatos: function (datos) {
+    console.log("🔍 Validando datos antes de guardar...");
+
     // Validar emails en áreas
     for (let area of datos.areas) {
       if (
@@ -361,6 +434,7 @@ const editManager = {
       }
     }
 
+    console.log("✅ Validación de datos exitosa");
     return true;
   },
 
@@ -373,6 +447,8 @@ const editManager = {
 
   // Cancelar edición
   cancelarEdicion: function () {
+    console.log("❌ Cancelando edición...");
+
     this.modoEdicion = false;
 
     // Restaurar botones
@@ -387,40 +463,19 @@ const editManager = {
     // Recargar la página para restaurar datos originales
     location.reload();
   },
-
-  // Actualizar vista después de guardar
-  actualizarVista: function () {
-    // Recargar la información
-    if (typeof cargarInformacionEmpresa === "function") {
-      cargarInformacionEmpresa();
-    }
-
-    // Restaurar botones
-    const btnActivar = document.getElementById("btn-activar-edicion");
-    const btnGuardar = document.getElementById("btn-guardar-cambios");
-    const btnCancelar = document.getElementById("btn-cancelar-edicion");
-
-    if (btnActivar) btnActivar.style.display = "inline-block";
-    if (btnGuardar) btnGuardar.style.display = "none";
-    if (btnCancelar) btnCancelar.style.display = "none";
-
-    // Remover botón de nueva fila si existe
-    const btnNuevaFila = document.getElementById("btn-nueva-fila");
-    if (btnNuevaFila) {
-      btnNuevaFila.remove();
-    }
-  },
 };
 
 // Inicialización automática cuando el DOM esté listo
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => {
+      console.log("🚀 Inicializando editManager...");
       editManager.inicializar();
     }, 100);
   });
 } else {
   setTimeout(() => {
+    console.log("🚀 Inicializando editManager...");
     editManager.inicializar();
   }, 100);
 }

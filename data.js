@@ -80,17 +80,21 @@ const DATOS_EMPRESAS = {
 // Función para guardar cambios en localStorage
 function guardarCambiosEmpresa(companyId, datosActualizados) {
   try {
+    console.log("💾 Guardando empresa:", companyId, datosActualizados);
+
+    // Actualizar objeto global
     DATOS_EMPRESAS[companyId] = datosActualizados;
 
-    // Guardar en localStorage para persistencia
+    // Guardar TODO el objeto en localStorage
     localStorage.setItem(
       "datosEmpresasEditados",
       JSON.stringify(DATOS_EMPRESAS)
     );
 
+    console.log("✅ Datos guardados en localStorage");
     return true;
   } catch (error) {
-    console.error("Error guardando cambios:", error);
+    console.error("❌ Error guardando cambios:", error);
     return false;
   }
 }

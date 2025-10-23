@@ -51,6 +51,19 @@
             >
               🗑️ Limpiar Filtros
             </button>
+            <button
+              onclick="forzarRecarga()"
+              style="
+                background: #ff9800;
+                color: white;
+                border: none;
+                padding: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+              "
+            >
+              🔄 Forzar Recarga
+            </button>
           </div>
 
           <div class="tabla-scroll-container">
@@ -63,6 +76,7 @@
                   <th>Puesto</th>
                   <th>Correo Electrónico</th>
                   <th>Teléfono</th>
+                  <!-- Columna de Acciones se agregará dinámicamente en modo edición -->
                 </tr>
               </thead>
               <tbody id="cuerpo-tabla-contactos">
@@ -86,5 +100,12 @@
     <script src="searchManager.js"></script>
     <script src="editManager.js"></script>
     <script src="info_empresa_script.js"></script>
+
+    <script>
+      function forzarRecarga() {
+        localStorage.removeItem("datosEmpresasEditados");
+        location.reload();
+      }
+    </script>
   </body>
 </html>
