@@ -3,49 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panel de Rastros - QuimiTech</title>
+    <title>Dashboard - QuimiTech</title>
     <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body class="rastros-page">
-    <header class="rastros-header rastros-specific"></header>
-    <header class="rastros-header">
-      <div class="empresa-info-selector">
-        <select id="select-cambio-empresa" class="select-empresa-header">
-          <option value="empresa1">Rastro Torreón</option>
-          <option value="empresa2">Empresa B</option>
-          <option value="empresa3">Empresa C</option>
-        </select>
-        <p id="nombre-empresa-actual" class="nombre-empresa-actual"></p>
-      </div>
-    </header>
-
-    <div class="contenedor-principal">
-      <div class="seccion-imagen">
-        <div class="etiqueta-cliente">CLIENTES</div>
-      </div>
-      <div class="seccion-botones">
-        <button
-          id="btn-opcion1"
-          class="btn-menu-rastros"
-          onclick="abrirInformacionGeneral()"
-        >
-          INFORMACION GENERAL
-        </button>
-        <button
-          id="btn-opcion2"
-          class="btn-menu-rastros"
-          onclick="window.location.href='programacion.html'"
-        >
-          PROGRAMACION DE ACTIVIDADES
-        </button>
-        <button
-          id="btn-opcion3"
-          class="btn-menu-rastros"
-          onclick="window.location.href='actividades.html'"
-        >
-          ACTIVIDADES
-        </button>
-      </div>
+    <div class="dashboard-container">
+      <header class="dashboard-header">
+        <div class="logo-container">
+          <img
+            src="https://raw.githubusercontent.com/jules-labs/jules-engineer-ai/main/frontend/images/quimitech.png"
+            alt="QuimiTech Logo"
+            class="logo"
+          />
+        </div>
+        <div class="user-menu">
+          <select id="select-cambio-empresa" class="company-selector">
+            <option value="empresa1">Rastro Torreón</option>
+            <option value="empresa2">Empresa B</option>
+            <option value="empresa3">Empresa C</option>
+          </select>
+        </div>
+      </header>
+      <main class="dashboard-main">
+        <div class="welcome-banner">
+          <h1>Bienvenido a QuimiTech</h1>
+          <p>Seleccione una opción para comenzar</p>
+        </div>
+        <nav class="dashboard-nav">
+          <a href="#" onclick="abrirInformacionGeneral()" class="nav-card">
+            <h2>Información General</h2>
+            <p>Visualizar datos de la empresa</p>
+          </a>
+          <a href="programacion.html" class="nav-card">
+            <h2>Programación de Actividades</h2>
+            <p>Planificar nuevas tareas</p>
+          </a>
+          <a href="actividades.html" class="nav-card">
+            <h2>Actividades</h2>
+            <p>Gestionar tareas existentes</p>
+          </a>
+        </nav>
+      </main>
     </div>
     <!-- Agregar esto antes del cierre del body en rastros.html -->
     <script src="data.js"></script>

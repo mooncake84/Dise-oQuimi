@@ -17,9 +17,10 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
+  font-family: "Roboto", sans-serif;
   line-height: 1.6;
+  background-color: #f0f2f5;
+  color: #333;
 }
 
 /* ========================================
@@ -208,203 +209,163 @@ body {
 /* ========================================
  * ESTILOS PARA LOGIN (index.html)
  * ======================================== */
-body {
-  display: block;
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
-  background-color: #000;
-  position: relative;
-  overflow: hidden;
 }
 
-/* CARRUSEL DE FONDO */
-.carrusel-fondo {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 1;
-  filter: blur(5px) brightness(0.7);
-}
-
-.carrusel-item {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity 1.5s ease-in-out;
-}
-
-.carrusel-item.active {
-  opacity: 1;
-}
-
-.contenedor-central {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  width: 100%;
+  height: 100%;
 }
 
-.contenedor-login {
+.login-box {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 320px;
-  padding: 40px 24px;
-  background-color: var(--color-primary);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation: fadeIn 0.5s ease;
+  max-width: 400px;
+  text-align: center;
 }
 
-.logo-contenedor {
-  width: 100%;
-  height: 80px;
-  margin-bottom: 24px;
-  background-color: var(--color-surface);
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+.logo-container {
+  margin-bottom: 30px;
 }
 
 .logo {
-  max-width: 90%;
-  max-height: 90%;
-  object-fit: contain;
+  max-width: 150px;
 }
 
-.input-login {
+.input-group {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.input-group input {
   width: 100%;
-  height: 48px;
-  padding: 0 20px;
-  margin-bottom: 16px;
-  border-radius: var(--border-radius);
-  border: 2px solid transparent;
-  background-color: var(--color-surface);
-  font-size: 15px;
-  transition: var(--transition);
-  text-align: center;
-  outline: none;
-}
-
-.input-login:focus {
-  border-color: var(--color-surface);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-}
-
-.btn-inicio-sesion {
-  width: 100%;
-  height: 48px;
-  padding: 0 20px;
-  border-radius: var(--border-radius);
+  padding: 10px 0;
+  font-size: 16px;
+  color: #333;
   border: none;
-  background-color: var(--color-surface);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-primary);
-  cursor: pointer;
-  transition: var(--transition);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  border-bottom: 2px solid #ccc;
+  outline: none;
+  background: transparent;
 }
 
-.btn-inicio-sesion:hover {
-  background-color: #f0f0f0;
-  transform: translateY(-2px);
+.input-group label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  font-size: 16px;
+  color: #aaa;
+  pointer-events: none;
+  transition: 0.3s ease all;
+}
+
+.input-group input:focus ~ label,
+.input-group input:valid ~ label {
+  top: -20px;
+  left: 0;
+  font-size: 12px;
+  color: #007bff;
+}
+
+.login-btn {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+  background: #0056b3;
 }
 
 /* ========================================
- * ESTILOS PARA RASTROS (rastros.html)
+ * ESTILOS PARA DASHBOARD (rastros.html)
  * ======================================== */
 body.rastros-page {
-  display: block;
-  padding: 0;
-  margin: 0;
-  min-height: 100vh;
-  background-color: #000;
+  background-color: #f0f2f5;
 }
-
-.rastros-header.rastros-specific {
-  left: 40%;
-  width: 60%;
-}
-
-.contenedor-principal {
-  display: flex;
-  min-height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-}
-
-.seccion-imagen {
-  flex: 2;
-  min-width: 40%;
-  position: relative;
-  background-image: url("./images/lab.jpg");
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-
-.etiqueta-cliente {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  padding: 20px 30px;
-  border-radius: 10px;
-  font-size: 24px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.seccion-botones {
-  flex: 3;
-  min-width: 60%;
-  background-color: #000;
+.dashboard-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 20px 40px;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-menu-rastros {
-  width: 80%;
-  max-width: 450px;
-  height: 90px;
-  margin: 20px 0;
-  border-radius: 45px;
-  border: none;
-  background-color: #fff;
-  color: #000;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  box-shadow: none;
+.dashboard-header .logo {
+  max-width: 120px;
 }
 
-.btn-menu-rastros:hover {
-  background-color: #f0f0f0;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+.company-selector {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.dashboard-main {
+  flex: 1;
+  padding: 40px;
+  text-align: center;
+}
+
+.welcome-banner {
+  margin-bottom: 40px;
+}
+
+.welcome-banner h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.dashboard-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.nav-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: #333;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.nav-card h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 /* ========================================

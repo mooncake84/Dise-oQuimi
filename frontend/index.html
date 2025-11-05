@@ -3,54 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login QuimiTech Completo</title>
+    <title>QuimiTech</title>
     <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <div class="carrusel-fondo">
-      <div
-        class="carrusel-item active"
-        style="background-image: url('./images/lab.jpg')"
-      ></div>
-      <div
-        class="carrusel-item"
-        style="
-          background-image: url('./images/materiales-e-instrumentos-laboratorio-quimico.jpg');
-        "
-      ></div>
-      <div
-        class="carrusel-item"
-        style="background-image: url('./images/quimicos.jpg')"
-      ></div>
-    </div>
-    <div class="contenedor-central">
-      <div class="contenedor-login">
-        <div class="logo-contenedor">
+  <body class="login-page">
+    <div class="login-container">
+      <div class="login-box">
+        <div class="logo-container">
           <img
-            id="logo-empresa"
+            src="https://raw.githubusercontent.com/jules-labs/jules-engineer-ai/main/frontend/images/quimitech.png"
+            alt="QuimiTech Logo"
             class="logo"
-            src="./images/quimitech.png"
-            alt="Logotipo de la Empresa"
           />
         </div>
-
-        <input
-          type="email"
-          id="email"
-          class="input-login"
-          placeholder="Correo Electrónico"
-        />
-
-        <input
-          type="password"
-          id="password"
-          class="input-login"
-          placeholder="Contraseña"
-        />
-
-        <button id="iniciar-sesion-btn" class="btn-inicio-sesion">
-          Iniciar sesión
-        </button>
+        <form id="login-form">
+          <div class="input-group">
+            <input type="email" id="email" required />
+            <label for="email">Correo Electrónico</label>
+          </div>
+          <div class="input-group">
+            <input type="password" id="password" required />
+            <label for="password">Contraseña</label>
+          </div>
+          <button type="submit" class="login-btn">Iniciar Sesión</button>
+        </form>
       </div>
     </div>
 
