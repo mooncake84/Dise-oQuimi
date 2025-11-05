@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pruebas API QuimiTech</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 1200px;
+                margin: 50px auto;
+                padding: 20px;
+                background-color: #f5f5f5;
+            }
+            .test-container {
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #333;
+                border-bottom: 3px solid #000;
+                padding-bottom: 10px;
+            }
+            .test-section {
+                margin: 30px 0;
+                padding: 20px;
+                background: #f9f9f9;
+                border-radius: 8px;
+                border-left: 4px solid #4caf50;
+            }
+            .test-section h3 {
+                margin-top: 0;
+                color: #4caf50;
+            }
+            button {
+                padding: 12px 24px;
+                margin: 5px;
+                border: none;
+                border-radius: 5px;
+                background-color: #000;
+                color: white;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+            button:hover {
+                background-color: #333;
+                transform: translateY(-2px);
+            }
+            button.secondary {
+                background-color: #2196f3;
+            }
+            button.danger {
+                background-color: #f44336;
+            }
+            #results {
+                margin-top: 20px;
+                padding: 20px;
+                background: #fff;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                max-height: 500px;
+                overflow-y: auto;
+            }
+            .result-item {
+                padding: 15px;
+                margin: 10px 0;
+                border-radius: 5px;
+                border-left: 4px solid #4caf50;
+                background: #f1f8f4;
+            }
+            .result-item.error {
+                border-left-color: #f44336;
+                background: #ffebee;
+            }
+            .result-item.info {
+                border-left-color: #2196f3;
+                background: #e3f2fd;
+            }
+            pre {
+                background: #263238;
+                color: #aed581;
+                padding: 15px;
+                border-radius: 5px;
+                overflow-x: auto;
+                font-size: 13px;
+            }
+            .status {
+                display: inline-block;
+                padding: 5px 10px;
+                border-radius: 3px;
+                font-size: 12px;
+                font-weight: bold;
+                margin-left: 10px;
+            }
+            .status.success {
+                background: #4caf50;
+                color: white;
+            }
+            .status.error {
+                background: #f44336;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="test-container">
+            <h1>🧪 Panel de Pruebas API - QuimiTech</h1>
+
+            <div class="test-section">
+                <h3>🔌 Pruebas de Conexión</h3>
+                <button onclick="testConnection()">Test Conexión API</button>
+                <button onclick="testDatabase()" class="secondary">
+                    Test Base de Datos
+                </button>
+            </div>
+
+            <div class="test-section">
+                <h3>🏢 Pruebas de Empresas</h3>
+                <button onclick="testGetEmpresas()">
+                    GET Todas las Empresas
+                </button>
+                <button onclick="testGetEmpresa()" class="secondary">
+                    GET Empresa por ID
+                </button>
+                <button onclick="testCreateEmpresa()" class="secondary">
+                    POST Nueva Empresa
+                </button>
+            </div>
+
+            <div class="test-section">
+                <h3>📋 Pruebas de Actividades</h3>
+                <button onclick="testGetActividades()">
+                    GET Todas las Actividades
+                </button>
+                <button onclick="testCreateActividad()" class="secondary">
+                    POST Nueva Actividad
+                </button>
+                <button onclick="testUpdateActividad()" class="secondary">
+                    PUT Actualizar Actividad
+                </button>
+            </div>
+
+            <div class="test-section">
+                <h3>🗑️ Pruebas de Limpieza</h3>
+                <button onclick="clearResults()">Limpiar Resultados</button>
+            </div>
+
+            <div id="results">
+                <p style="text-align: center; color: #999">
+                    Los resultados aparecerán aquí...
+                </p>
+            </div>
+        </div>
+
+        <script src="js/api-config.js"></script>
+        <script>
+            const resultsDiv = document.getElementById("results");
+
+            function addResult(message, type = "success", data = null) {
+                const timestamp = new Date().toLocaleTimeString();
+                const resultItem = document.createElement("div");
+                resultItem.className = `result-item ${type}`;
+
+                let html = `
+                <strong>[${timestamp}]</strong> ${message}
+                <span class="status ${type}">${type.toUpperCase()}</span>
+            `;
+
+                if (data) {
+                    html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+
+                resultItem.innerHTML = html;
+                resultsDiv.insertBefore(resultItem, resultsDiv.firstChild);
+            }
+
+            function clearResults() {
+                resultsDiv.innerHTML =
+                    '<p style="text-align: center; color: #999;">Resultados limpiados...</p>';
+            }
+
+            // ========== PRUEBAS DE CONEXIÓN ==========
+
+            async function testConnection() {
+                try {
+                    addResult("🔍 Probando conexión a la API...", "info");
+                    const isConnected = await ApiService.testConnection();
+
+                    if (isConnected) {
+                        addResult("✅ Conexión exitosa con la API", "success");
+                    } else {
+                        addResult("❌ No se pudo conectar con la API", "error");
+                    }
+                } catch (error) {
+                    addResult(
+                        "❌ Error de conexión: " + error.message,
+                        "error"
+                    );
+                }
+            }
+
+            async function testDatabase() {
+                try {
+                    addResult(
+                        "🔍 Verificando conexión a base de datos...",
+                        "info"
+                    );
+                    const result = await ApiService.getEmpresas();
+
+                    if (result.success) {
+                        addResult(
+                            `✅ Base de datos respondiendo correctamente (${result.data.length} empresas encontradas)`,
+                            "success"
+                        );
+                    }
+                } catch (error) {
+                    addResult(
+                        "❌ Error de base de datos: " + error.message,
+                        "error"
+                    );
+                }
+            }
+
+            // ========== PRUEBAS DE EMPRESAS ==========
+
+            async function testGetEmpresas() {
+                try {
+                    addResult("📡 GET /api/v1/empresas", "info");
+                    const result = await ApiService.getEmpresas();
+
+                    if (result.success) {
+                        addResult(
+                            `✅ Empresas obtenidas exitosamente (${result.data.length} registros)`,
+                            "success",
+                            result.data
+                        );
+                    }
+                } catch (error) {
+                    addResult("❌ Error: " + error.message, "error");
+                }
+            }
+
+            async function testGetEmpresa() {
+                try {
+                    const id = prompt(
+                        "Ingrese ID de empresa (default: 1):",
+                        "1"
+                    );
+                    if (!id) return;
+
+                    addResult(`📡 GET /api/v1/empresas/${id}`, "info");
+                    const result = await ApiService.getEmpresa(id);
+
+                    if (result.success) {
+                        addResult(
+                            `✅ Empresa obtenida: ${result.data.nombre}`,
+                            "success",
+                            result.data
+                        );
+                    }
+                } catch (error) {
+                    addResult("❌ Error: " + error.message, "error");
+                }
+            }
+
+            async function testCreateEmpresa() {
+                try {
+                    const datos = {
+                        nombre: "Empresa de Prueba API",
+                        giro: "Pruebas y Testing",
+                        direccion: "Av. Test 123",
+                        contacto: "test@api.com",
+                        telefono: "1234567890",
+                    };
+
+                    addResult("📡 POST /api/v1/empresas", "info");
+                    const result = await ApiService.crearEmpresa(datos);
+
+                    if (result.success) {
+                        addResult(
+                            `✅ Empresa creada exitosamente (ID: ${result.data.id})`,
+                            "success",
+                            result.data
+                        );
+                    }
+                } catch (error) {
+                    addResult("❌ Error: " + error.message, "error");
+                }
+            }
+
+            // ========== PRUEBAS DE ACTIVIDADES ==========
+
+            async function testGetActividades() {
+                try {
+                    addResult("📡 GET /api/v1/actividades", "info");
+                    const result = await ApiService.getActividades();
+
+                    if (result.success) {
+                        addResult(
+                            `✅ Actividades obtenidas exitosamente (${result.data.length} registros)`,
+                            "success",
+                            result.data
+                        );
+                    }
+                } catch (error) {
+                    addResult("❌ Error: " + error.message, "error");
+                }
+            }
+
+            async function testCreateActividad() {
+                try {
+                    const datos = {
+                        empresa_id: 1,
+                        fecha: new Date().toISOString().split("T")[0],
+                        hora: "10:00",
+                        objetivo: "Prueba de API - Actividad de testing",
+                        datos_adicionales:
+                            "Esta es una actividad creada desde el panel de pruebas",
+                        estado: "Pendiente",
+                    };
+
+                    addResult("📡 POST /api/v1/actividades", "info");
+                    const result = await ApiService.crearActividad(datos);
+
+                    if (result.success) {
+                        addResult(
+                            `✅ Actividad creada exitosamente (ID: ${result.data.id})`,
+                            "success",
+                            result.data
+                        );
+                    }
+                } catch (error) {
+                    addResult("❌ Error: " + error.message, "error");
+                }
+            }
+
+            async function testUpdateActividad() {
+                try {
+                    const id = prompt(
+                        "Ingrese ID de actividad a actualizar:",
+                        "1"
+                    );
+                    if (!id) return;
+
+                    const datos = {
+                        estado: "Completado",
+                        pedido_entregado: "TEST-001",
+                        cantidad_entregada: "10",
+                    };
+
+                    addResult(`📡 PUT /api/v1/actividades/${id}`, "info");
+                    const result = await ApiService.actualizarActividad(
+                        id,
+                        datos
+                    );
+
+                    if (result.success) {
+                        addResult(
+                            `✅ Actividad actualizada exitosamente`,
+                            "success",
+                            result.data
+                        );
+                    }
+                } catch (error) {
+                    addResult("❌ Error: " + error.message, "error");
+                }
+            }
+
+            // Auto-test al cargar
+            window.addEventListener("load", () => {
+                addResult("🚀 Panel de pruebas cargado correctamente", "info");
+                addResult("💡 Seleccione una prueba para comenzar", "info");
+            });
+        </script>
+    </body>
+</html>
